@@ -15,6 +15,7 @@ import { Bucket } from '@/domain/models/bucket-model';
 import DetailOverlay from './components/DetailOverlay';
 import BucketList from './components/BucketList';
 import Loading from '@/presentation/components/ui/Loading';
+import Image from 'next/image';
 
 function Home() {
   const queryClient = useQueryClient();
@@ -104,9 +105,7 @@ function Home() {
     <div className="px-4">
       <Loading show={isLoading} />
       <header className="h-[54px] flex justify-between items-center">
-        <div>
-          <img src="images/icons/main-icon-gray.svg" alt="" />
-        </div>
+        <Image width={90} height={20} src="/images/icons/main-icon-gray.svg" alt="main-icon" />
         <Button size={'sm'} onClick={handleLogout} className="body1Strong" variant={'outline'}>
           로그아웃
         </Button>
@@ -115,14 +114,12 @@ function Home() {
         <div className="py-2 text-center">
           <div className="flex justify-center ">
             <h1 className="title3">{profile?.nickname ?? ''}</h1>
-            <img src="images/icons/home-main.svg" alt="" />
-            <div>
-              <img src="images/icons/home-star.svg" alt="" />
-            </div>
+            <Image width={90} height={24} src="/images/icons/home-main.svg" alt="" />
+            <Image width={16} height={16} src="/images/icons/home-star.svg" alt="" />
           </div>
           <div className="mt-3 flex justify-center items-center">
             <div className="w-4 h-4 mt-[3px]">
-              <img src="images/icons/home-flag.svg" alt="" />
+              <Image width={12} height={12} src="/images/icons/home-flag.svg" alt="" />
             </div>
             <p className="caption1">{`지금까지 총 ${
               bucketList?.length ?? 0
@@ -133,7 +130,7 @@ function Home() {
         <section>
           {bucketList?.length === 0 && (
             <div className="py-14 flex flex-col justify-center items-center">
-              <img src="images/icons/home-empty.svg" alt="" />
+              <Image src="/images/icons/home-empty.svg" alt="" />
               <p className="body2Strong text-[#9E9E9E] mt-3">2024년에 이루고 싶은</p>
               <p className="body2Strong text-[#9E9E9E]">버킷을 만들어 볼까요?</p>
             </div>
@@ -149,12 +146,19 @@ function Home() {
         </section>
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2">
           <Button onClick={() => router.push('/new')}>
-            <img src="images/icons/write.svg" alt="" />
+            <Image width={16} height={16} src="/images/icons/write.svg" alt="write" />
             <span className="ml-1 subTitle2">버킷 만들기</span>
           </Button>
         </div>
         {showClapping ? (
-          <img className="fixed left-1/2 -translate-x-1/2 bottom-24" src="images/clapping.gif" alt="clappingGif" />
+          <Image
+            width={300}
+            height={524}
+            unoptimized
+            className="fixed left-1/2 -translate-x-1/2 bottom-24"
+            src="/images/clapping.gif"
+            alt="clappingGif"
+          />
         ) : null}
         {selectedBucket && (
           <DetailOverlay
@@ -165,24 +169,14 @@ function Home() {
         )}
 
         {showDeleteModal && (
-          <ConfirmModal
-            closeModal={() => {
-              setShowDeleteModal(false);
-            }}
-          >
+          <ConfirmModal closeModal={() => setShowDeleteModal(false)}>
             <div className="text-center">
               <p className="subTitle1">{`'${selectedMoreBtn?.title}'`}</p>
               <p className="subTitle1">버킷을 지우시겠어요?</p>
               <p className="body1 mt-1">버킷을 지우면 다시 복구할 수 없어요</p>
             </div>
             <div className="flex justify-center mt-4">
-              <Button
-                onClick={() => {
-                  setShowDeleteModal(false);
-                }}
-                className="w-full mr-2"
-                variant={'outline'}
-              >
+              <Button onClick={() => setShowDeleteModal(false)} className="w-full mr-2" variant={'outline'}>
                 닫기
               </Button>
               <Button onClick={deleteBucket} className="w-full">
@@ -194,9 +188,7 @@ function Home() {
 
         <BottomModal
           show={selectedMoreBtn !== null}
-          closeModal={() => {
-            setSelectedMoreBtn(null);
-          }}
+          closeModal={() => setSelectedMoreBtn(null)}
           bucket={selectedMoreBtn!}
         >
           <ul className="body2Strong mb-12">

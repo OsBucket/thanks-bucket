@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { FC, useState } from 'react';
 
 import { Bucket, Todo } from '@/domain/models/bucket-model';
@@ -71,9 +72,15 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
 
   const getTodoComments = () => {
     const completedTodoList = todoList.filter((todo) => todo.isDone).length;
-    if (completedTodoList === 0) return '열심히 달성해봐요 💪';
-    if (todoList.length === completedTodoList) return '버킷을 이뤘어요 👏';
-    if (completedTodoList > 0) return `달성까지 ${getCompletedTodoPercent()}% 남았어요 💪`;
+    if (completedTodoList === 0) {
+      return '열심히 달성해봐요 💪';
+    }
+    if (todoList.length === completedTodoList) {
+      return '버킷을 이뤘어요 👏';
+    }
+    if (completedTodoList > 0) {
+      return `달성까지 ${getCompletedTodoPercent()}% 남았어요 💪`;
+    }
   };
 
   const onBucketComplete = () => {
@@ -106,7 +113,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
         >
           <div className="text-end mb-2">
             <Button onClick={closeOverlay} className="p-0 h-0" variant={'basic'}>
-              <img src="images/icons/close.svg" alt="closeBtn" />
+              <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
             </Button>
           </div>
           <div className="text-center max-h-[200px] overflow-y-scroll">
@@ -130,13 +137,20 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
               <TodoList todoList={todoList} toggleChecked={onToggleChecked} inputDisabled={true} />
             ) : (
               <div className="py-5 flex flex-col justify-center items-center mt-2 h-[112px]">
-                <img src="/check-list" />
+                <Image width={40} height={40} src="/check-list.svg" alt="check-list" />
                 <p className="mt-2 caption1Strong text-text-textGray">상세 할 일을 정하지 않았어요</p>
               </div>
             )}
           </div>
           {showClapping ? (
-            <img className="-z-50 fixed left-[0%] bottom-28 h-full w-full" src="/images/clapping.gif" alt="clapping" />
+            <Image
+              width={300}
+              height={524}
+              unoptimized
+              className="zIndex-50 fixed left-[0%] bottom-28 h-full w-full"
+              src="/images/clapping.gif"
+              alt="clapping"
+            />
           ) : null}
           <div className="mt-4 mb-3">
             <Button

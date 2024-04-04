@@ -1,8 +1,9 @@
 'use client';
+import React from 'react';
+import Image from 'next/image';
+import { VariantProps, cva } from 'class-variance-authority';
 
 import { cn } from '@/presentation/lib/utils';
-import { VariantProps, cva } from 'class-variance-authority';
-import React from 'react';
 import { Button } from './Button';
 
 const inputVariants = cva('w-full rounded-5xl py-[5px] px-4 focus:outline-none', {
@@ -12,11 +13,6 @@ const inputVariants = cva('w-full rounded-5xl py-[5px] px-4 focus:outline-none',
       gray: 'border-2 border-text-gray-400',
       underline: 'rounded-none p-0 py-2 border-b-2 border-text-gray-400'
     }
-    // size: {
-    //   default: 'h-10 py-2 px-4',
-    //   sm: 'h-9 px-2 rounded-md',
-    //   lg: 'h-11 px-8 rounded-md',
-    // },
   },
   defaultVariants: {
     variant: 'default'
@@ -42,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {props.value && (
             <Button onClick={onClearText} variant={'basic'} className="p-0 h-0 top-1/2 absolute right-0">
-              <img src="/clearBtn.svg" />
+              <Image src="/clearBtn.svg" alt="clear-btn" />
             </Button>
           )}
         </div>

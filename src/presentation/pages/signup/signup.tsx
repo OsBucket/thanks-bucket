@@ -7,6 +7,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import OccupationSelect from './components/OccupationSelect';
+import Image from 'next/image';
 
 interface IInputLabelProps {
   id: string;
@@ -186,7 +187,7 @@ const Signup: FC = () => {
                 placeholder="닉네임 혹은 이름"
               />
             </div>
-            <img src="/images/icons/signupIcon.svg" className="ml-2" alt="" />
+            <Image src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
           </div>
           <p className={`caption1Strong ${errors.nickname ? 'text-error' : 'text-[#9E9E9E]'}`}>
             한글, 영어, 숫자로 2~8자까지 가능해요.

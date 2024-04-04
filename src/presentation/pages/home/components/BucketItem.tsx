@@ -1,6 +1,7 @@
 import { Bucket } from '@/domain/models/bucket-model';
 import { Button } from '@/presentation/components/ui/Button';
 import Checkbox from '@/presentation/components/ui/Checkbox';
+import Image from 'next/image';
 import { FC } from 'react';
 
 interface BucketItemProps {
@@ -42,7 +43,7 @@ const BucketItem: FC<BucketItemProps> = ({ bucket, selectBucket, toggleComplete,
       </div>
       <div className=" min-w-5 flex items-center justify-center flex-grow-0">
         <Button size={'basic'} variant={'basic'} onClick={onClickMoreBtn}>
-          <img src="images/icons/more-btn.svg" alt="" />
+          <Image width={12} height={12} src="/images/icons/more-btn.svg" alt="more-btn" />
         </Button>
       </div>
     </li>

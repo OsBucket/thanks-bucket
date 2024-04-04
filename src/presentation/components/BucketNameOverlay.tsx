@@ -1,7 +1,9 @@
+import Image from 'next/image';
+import { FC, useEffect, useRef, useState } from 'react';
+
 import { Button } from '@/presentation/components/ui/Button';
 import { ModalWrapper } from '@/presentation/components/ui/ConfirmModal';
 import { Input } from '@/presentation/components/ui/Input';
-import { FC, useEffect, useRef, useState } from 'react';
 
 interface BucketNameOverlayProps {
   show: boolean;
@@ -31,7 +33,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
       >
         <header className="h-[54px] px-2 flex justify-between items-center">
           <Button onClick={closeModal} className="p-0 h-[36px] w-[36px]" variant={'basic'}>
-            <img src="/back.svg" />
+            <Image src="/back.svg" alt="back" width={24} height={24} />
           </Button>
           <p className="body2Strong">버킷 이름</p>
           <Button

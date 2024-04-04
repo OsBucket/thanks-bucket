@@ -2,6 +2,7 @@ import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
 import TodoList from '@/presentation/components/TodoList';
@@ -77,7 +78,7 @@ const NewBucket: FC<NewProps> = () => {
     <main className="max-w-[450px] px-4">
       <header className="h-14 flex items-center">
         <Button onClick={goHome} className="p-0" variant={'basic'}>
-          <img src="/images/icons/close.svg" alt="closeBtn" />
+          <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
         </Button>
       </header>
       <section>

@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { FC, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
@@ -11,7 +12,7 @@ interface TopicsProps {
 }
 
 const Topics: FC<TopicsProps> = ({ selectedCategories, setSelectedCategories }) => {
-  const { data: topics } = useQuery({
+  const { data: topics = [] } = useQuery({
     queryKey: ['topics'],
     queryFn: getTopics
   });
@@ -19,7 +20,7 @@ const Topics: FC<TopicsProps> = ({ selectedCategories, setSelectedCategories }) 
   const [showCategory, setShowCategory] = useState(false);
 
   const selectedCtgNames = () => {
-    const selectedCtgs = topics!.filter((ctg) => selectedCategories.includes(ctg.id));
+    const selectedCtgs = topics.filter((ctg) => selectedCategories.includes(ctg.id));
     const joinStr = selectedCtgs.map((ctg) => ctg.content).join(', ');
 
     return joinStr.length > 10 ? joinStr.slice(0, 10) + '...' : joinStr;
@@ -37,18 +38,11 @@ const Topics: FC<TopicsProps> = ({ selectedCategories, setSelectedCategories }) 
     <div className={`border mt-6 rounded-lg ${showCategory ? 'border-black ' : ''}`}>
       <div className="flex justify-between items-center py-5 px-4">
         <p className="body1Strong basis-1/2">어떤 주제인가요?</p>
-        <Button
-          className=""
-          onClick={() => {
-            setShowCategory((prev) => !prev);
-          }}
-          variant={'basic'}
-          size={'basic'}
-        >
+        <Button onClick={() => setShowCategory((prev) => !prev)} variant={'basic'} size={'basic'}>
           <span className={`body1Strong ${selectedCategories.length > 0 ? '' : 'text-[#BDBDBD]'} mr-1`}>
             {selectedCategories.length > 0 ? selectedCtgNames() : '선택'}
           </span>
-          <img src="/dropdown.svg" />
+          <Image width={12} height={12} src="/dropdown.svg" alt="dropdown" />
         </Button>
       </div>
       {showCategory && (

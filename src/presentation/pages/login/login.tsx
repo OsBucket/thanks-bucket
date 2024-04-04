@@ -2,6 +2,7 @@
 
 import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 import { Authentication } from '@/domain/usecases';
 import { Validation } from '@/presentation/protocols';
@@ -53,7 +54,7 @@ const Login: FC<Props> = ({ authentication }) => {
   return (
     <main className="text-center max-w-[450px] px-4">
       <div className="flex justify-center mt-20">
-        <img src="images/icons/main-icon.svg" alt="mainImage" />
+        <Image width={162} height={36} src="images/icons/main-icon.svg" alt="main-icon" />
       </div>
       <div className="mt-5">
         <p className="body1">꿈꾸는 것, 도전하고 싶은 것</p>
@@ -108,12 +109,7 @@ const Login: FC<Props> = ({ authentication }) => {
                 </>
               )}
             </div>
-            <Button
-              onClick={() => {
-                setShowErrorModal(false);
-              }}
-              className="mt-4 w-full"
-            >
+            <Button onClick={() => setShowErrorModal(false)} className="mt-4 w-full">
               <p className="subTitle2">확인</p>
             </Button>
           </ConfirmModal>
