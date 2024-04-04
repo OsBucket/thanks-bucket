@@ -2,8 +2,6 @@
 
 import { makeLogin } from '@/main/factories/pages/login-factory';
 
-function LoginPage() {
+export default function LoginPage() {
   return makeLogin();
 }
-
-export default LoginPage;

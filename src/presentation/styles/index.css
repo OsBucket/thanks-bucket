@@ -40,5 +40,5 @@ input[type='date']::-webkit-calendar-picker-indicator {
   margin-top: 7px;
   margin-left: -18px;
   padding-left: 0;
-  background: url('assets/dropdown.svg') no-repeat;
+  background: url('/dropdown.svg') no-repeat;
 }

@@ -26,7 +26,6 @@ axiosInstance.interceptors.response.use(
     return res;
   },
   (err) => {
-    console.log(err.response.status);
     if (window.location.pathname !== '/login' && err.response.status === 401) {
       window.location.href = '/login';
     }

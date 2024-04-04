@@ -1,86 +1,80 @@
 'use client';
-import { FC, useEffect } from 'react';
+
+import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Authentication } from '@/domain/usecases';
 import { Validation } from '@/presentation/protocols';
 import { Input } from '@/presentation/components/ui/Input';
 import { Button } from '@/presentation/components/ui/Button';
-import { useRecoilState, useResetRecoilState } from 'recoil';
-
-import { loginState } from './components/atoms';
-// import { currentAccountState } from '@/presentation/components';
+import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { InvalidCredentialsError } from '@/domain/errors';
 
 type Props = {
   validation: Validation;
   authentication: Authentication;
 };
 
-const Login: FC<Props> = ({ authentication, validation }) => {
+interface ILoginInput {
+  memberId: string;
+  password: string;
+}
+
+enum LoginError {
+  AUTH_ERROR,
+  INPUT_ERROR
+}
+
+const Login: FC<Props> = ({ authentication }) => {
   const router = useRouter();
 
-  const [state, setState] = useRecoilState(loginState);
-  const resetLoginState = useResetRecoilState(loginState);
-  // const { setCurrentAccount } = useRecoilValue(currentAccountState);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errMsg, setErrMsg] = useState<LoginError>();
+  const { register, handleSubmit } = useForm<ILoginInput>();
 
-  useEffect(() => resetLoginState(), []);
-  useEffect(() => validate('id'), [state.memberId]);
-  useEffect(() => validate('password'), [state.password]);
-
-  const validate = (field: string): void => {
-    const { memberId, password } = state;
-    const formData = { memberId, password };
-    setState((old) => ({ ...old, [`${field}Error`]: validation.validate(field, formData) }));
-    setState((old) => ({ ...old, isFormInvalid: !!old.memberIdError || !!old.passwordError }));
-  };
-
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
+  const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
     try {
-      if (state.isLoading || state.isFormInvalid) {
-        return;
-      }
-      setState((old) => ({ ...old, isLoading: true }));
-      const { memberId, password } = state;
-
-      const res = await authentication.auth({ memberId, password });
-      console.log({ res });
+      await authentication.auth(data);
       router.push('/');
     } catch (error) {
-      const e = error as unknown as { message: string };
-      setState((old) => ({ ...old, isLoading: false, mainError: e.message }));
+      if (error instanceof InvalidCredentialsError) {
+        setErrMsg(LoginError.AUTH_ERROR);
+        setShowErrorModal(true);
+      }
     }
+  };
+
+  const onError = () => {
+    setErrMsg(LoginError.INPUT_ERROR);
+    setShowErrorModal(true);
   };
 
   return (
     <main className="text-center max-w-[450px] px-4">
       <div className="flex justify-center mt-20">
-        <img src="/images/icons/main-icon.svg" alt="main-image" />
+        <img src="images/icons/main-icon.svg" alt="mainImage" />
       </div>
       <div className="mt-5">
         <p className="body1">꿈꾸는 것, 도전하고 싶은 것</p>
         <p className="body2Strong">하나씩 이뤄가는 누군가의 버킷리스트</p>
       </div>
-      <form onSubmit={onSubmit}>
-        <div className="mt-10 flex flex-col gap-3 justify-start">
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
+        <div className="mt-10 flex flex-col justify-start">
           <Input
-            name="memberId"
-            value={state.memberId}
             autoComplete="off"
-            variant="gray"
+            variant={'gray'}
             className="h-12"
             placeholder="아이디"
-            onChange={(e) => setState({ ...state, [e.target.name]: e.target.value })}
+            {...register('memberId', { required: true })}
           />
           <Input
             type="password"
-            name="password"
-            value={state.password}
             autoComplete="off"
-            variant="gray"
-            className="h-12"
+            variant={'gray'}
+            className="mt-3 h-12"
             placeholder="비밀번호"
-            onChange={(e) => setState({ ...state, [e.target.name]: e.target.value })}
+            {...register('password', { required: true })}
           />
         </div>
         <div className="mt-5">
@@ -92,6 +86,39 @@ const Login: FC<Props> = ({ authentication, validation }) => {
           </Button>
         </div>
       </form>
+      {showErrorModal && (
+        <>
+          <ConfirmModal
+            hasCancelBtn={false}
+            closeModal={() => {
+              setShowErrorModal(false);
+            }}
+            modalMessage="존재하는 계정이 없거나 잘못된 비밀번호에요"
+          >
+            <div className="text-center subTitle1">
+              {errMsg === LoginError.AUTH_ERROR ? (
+                <>
+                  <p>존재하는 계정이 없거나</p>
+                  <p>잘못된 비밀번호에요</p>
+                </>
+              ) : (
+                <>
+                  <p>아이디와 비밀번호를 </p>
+                  <p>모두 입력해주세요</p>
+                </>
+              )}
+            </div>
+            <Button
+              onClick={() => {
+                setShowErrorModal(false);
+              }}
+              className="mt-4 w-full"
+            >
+              <p className="subTitle2">확인</p>
+            </Button>
+          </ConfirmModal>
+        </>
+      )}
     </main>
   );
 };

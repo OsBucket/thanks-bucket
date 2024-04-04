@@ -13,8 +13,8 @@ export default function useBackPress({ backPressed, showOverlay }: useBackPressP
     };
 
     history.pushState(null, '', location.href);
-    window.addEventListener('popstate', preventGoBack);
+    window?.addEventListener('popstate', preventGoBack);
 
-    return () => window.removeEventListener('popstate', preventGoBack);
+    return () => window?.removeEventListener('popstate', preventGoBack);
   }, [backPressed, showOverlay]);
 }

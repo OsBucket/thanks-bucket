@@ -12,7 +12,7 @@ type PostBucketParams = {
   }[];
 };
 
-export type UpdateBucket = Bucket & {
+export type UpdateBucketValue = Bucket & {
   topicIds: number[];
 };
 
@@ -38,7 +38,7 @@ export async function deleteBucketById(id: number) {
   return axiosInstance.delete(`/buckets/${id}`);
 }
 
-export async function updateBucketById(bucket: UpdateBucket) {
+export async function updateBucketById(bucket: UpdateBucketValue) {
   return axiosInstance.put(`/buckets/${bucket.id}`, bucket);
 }
 
