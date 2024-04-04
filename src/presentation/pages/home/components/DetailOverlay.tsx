@@ -147,7 +147,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
               width={300}
               height={524}
               unoptimized
-              className="zIndex-50 fixed left-[0%] bottom-28 h-full w-full"
+              className="z-50 fixed left-[0%] bottom-28 h-full w-full"
               src="/images/clapping.gif"
               alt="clapping"
             />

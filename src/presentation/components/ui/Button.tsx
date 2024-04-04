@@ -18,8 +18,6 @@ const buttonVariants = cva(
         basic: 'h-0 p-0',
         default: 'h-12 py-3 px-4',
         sm: 'py-[6px] px-[12px] h-[34px]'
-        // sm: 'h-9 px-2 rounded-md',
-        // lg: 'h-11 px-8 rounded-md',
       }
     },
     defaultVariants: {
