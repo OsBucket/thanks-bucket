@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +8,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomModal from '@/presentation/components/ui/BottomModal';
 import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
-
 import { Button } from '@/presentation/components/ui/Button';
 import { deleteBucketById, getBuckets, updateBucketById } from '@/services/bucket';
 import { getProfile, logout } from '@/services/user';
@@ -15,13 +15,12 @@ import { Bucket } from '@/domain/models/bucket-model';
 import DetailOverlay from './components/DetailOverlay';
 import BucketList from './components/BucketList';
 import Loading from '@/presentation/components/ui/Loading';
-import Image from 'next/image';
 
 function Home() {
   const queryClient = useQueryClient();
 
-  const { data: bucketList, isLoading } = useQuery({ queryKey: ['buckets'], queryFn: getBuckets });
   const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
+  const { data: bucketList, isLoading } = useQuery({ queryKey: ['buckets'], queryFn: getBuckets });
 
   const mutation = useMutation({
     mutationFn: deleteBucketById,
@@ -38,16 +37,11 @@ function Home() {
   });
 
   const router = useRouter();
-
   const [showClapping, setShowClapping] = useState<boolean>(false);
   const [selectedBucket, setSelectedBucket] = useState<Bucket | null>(null);
   const [selectedMoreBtn, setSelectedMoreBtn] = useState<Bucket | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-
-  const [showSucessSnackbar, setShowSucessSnackbar] = useState({
-    show: false,
-    message: ''
-  });
+  const [showSucessSnackbar, setShowSucessSnackbar] = useState({ show: false, message: '' });
 
   const selectBucket = (bucket: Bucket) => {
     setSelectedBucket(bucket);
@@ -167,7 +161,6 @@ function Home() {
             closeOverlay={() => setSelectedBucket(null)}
           />
         )}
-
         {showDeleteModal && (
           <ConfirmModal closeModal={() => setShowDeleteModal(false)}>
             <div className="text-center">
@@ -185,11 +178,10 @@ function Home() {
             </div>
           </ConfirmModal>
         )}
-
         <BottomModal
+          bucket={selectedMoreBtn!}
           show={selectedMoreBtn !== null}
           closeModal={() => setSelectedMoreBtn(null)}
-          bucket={selectedMoreBtn!}
         >
           <ul className="body2Strong mb-12">
             <li
