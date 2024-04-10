@@ -24,7 +24,7 @@ const Checkbox: FC<CheckboxProps> = ({ id, label, textClass = 'body1', checked, 
             onChange && onChange(id, checked);
           }}
           style={{
-            backgroundImage: `${checked ? `url('images/icons/check-on.svg')` : ''}`,
+            backgroundImage: `${checked ? `url('/images/icons/check-on.svg')` : ''}`,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center'
           }}

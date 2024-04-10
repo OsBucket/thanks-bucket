@@ -11,10 +11,11 @@ import { Todo } from '@/domain/models/bucket-model';
 import { addBucket } from '@/services/bucket';
 import BucketNameOverlay from '@/presentation/components/BucketNameOverlay';
 import Topics from '@/presentation/components/Topics';
+import { LoadBucketTemplateList } from '@/domain/usecases';
 
-interface NewProps {}
+interface NewBucketProps {}
 
-const NewBucket: FC<NewProps> = () => {
+const NewBucket: FC<NewBucketProps> = () => {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -35,7 +36,7 @@ const NewBucket: FC<NewProps> = () => {
     setNewTodo('');
   };
 
-  const submitBucket = async () => {
+  const handleBucketSubmit = async () => {
     const filteredTodoList = todoList.map((todo) => ({
       content: todo.content,
       isDone: todo.isDone
@@ -58,13 +59,32 @@ const NewBucket: FC<NewProps> = () => {
     }
   };
 
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+    if (bucketTemplate !== undefined) {
+      const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
+      setBucketName(bucketName);
+      if (bucketTemplateTopics !== null) {
+        const categories = bucketTemplateTopics.map((topics) => topics.id);
+        setSelectedCategories(categories);
+      }
+      if (bucketTodoNames !== null) {
+        const templateTodos = bucketTodoNames.split(', ').map((name) => ({
+          id: Date.now(),
+          content: name,
+          isDone: false
+        }));
+        setTodoList(templateTodos);
+      }
+    } else {
+      setBucketName(name);
+    }
+
+    setShowBucketNameModal(false);
+  };
+
   const goHome = () => {
     router.push('/');
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   useBackPress({
     backPressed: () => {
@@ -79,7 +99,7 @@ const NewBucket: FC<NewProps> = () => {
 
   return (
     <main className="max-w-[450px] px-4">
-      <header className="h-14 flex items-center">
+      <header className="h-[54px] flex items-center">
         <Button onClick={goHome} className="p-0" variant={'basic'}>
           <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
         </Button>
@@ -122,7 +142,11 @@ const NewBucket: FC<NewProps> = () => {
               <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
                 <span className="subTitle2 ">마이버킷 이동</span>
               </Button>
-              <Button onClick={submitBucket} disabled={bucketName.trim().length === 0 || !dueDate} className="w-full">
+              <Button
+                onClick={handleBucketSubmit}
+                disabled={bucketName.trim().length === 0 || !dueDate}
+                className="w-full"
+              >
                 <span className="subTitle2">버킷 만들기</span>
               </Button>
             </div>
@@ -133,10 +157,7 @@ const NewBucket: FC<NewProps> = () => {
         <BucketNameOverlay
           title={bucketName}
           show={showBucketNameModal}
-          onSubmit={(name) => {
-            setBucketName(name);
-            setShowBucketNameModal(false);
-          }}
+          onSubmit={handleBucketTempleteSubmit}
           closeModal={() => {
             setShowBucketNameModal(false);
           }}
