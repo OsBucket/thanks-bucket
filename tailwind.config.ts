@@ -14,16 +14,29 @@ const config: Config = {
         '5xl': '35px'
       },
       colors: {
-        text: {
-          textGray: '#9E9E9E',
-          gray: {
-            400: '#BDBDBD'
-          }
+        white: '#FFFFFF',
+        black: '#000000',
+        gray: {
+          900: '#222222',
+          800: '#424242',
+          700: '#616161',
+          500: '#9E9E9E',
+          400: '#BDBDBD',
+          300: '#E0E0E0',
+          200: '#EEEEEE'
         },
-        error: '#EF2B2A'
-      },
-      backgroundImage: {
-        'check-on': "url('//images/icons/check-on.svg')"
+        red: {
+          500: '#EF2B2A'
+        },
+        blue: {
+          500: '#067DFD'
+        },
+        green: {
+          500: '#00C400'
+        },
+        purple: {
+          300: '#CE95F8'
+        }
       },
       keyframes: {
         'bottom-sheet-up': {

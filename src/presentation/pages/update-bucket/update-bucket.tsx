@@ -114,8 +114,10 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
 
         <div className="mt-6 py-2">
           <p className="body2Strong mb-1">TO DO LIST</p>
-          <p className="caption1 text-[#424242]">구체적인 액션 플랜을 세우면 목표 달성률이 높아진다는 사실,</p>
-          <p className="caption1 text-[#424242]">알고 계신가요? 버킷 달성을 위한 할 일을 계획해보세요.</p>
+          <p className="caption1 text-gray-800">
+            구체적인 액션 플랜을 세우면 목표 달성률이 높아진다는 사실, <br />
+            알고 계신가요? 버킷 달성을 위한 할 일을 계획해보세요.
+          </p>
         </div>
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />

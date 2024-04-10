@@ -39,7 +39,7 @@ const Topics: FC<TopicsProps> = ({ selectedCategories, setSelectedCategories }) 
       <div className="flex justify-between items-center py-5 px-4">
         <p className="body1Strong basis-1/2">어떤 주제인가요?</p>
         <Button onClick={() => setShowCategory((prev) => !prev)} variant={'basic'} size={'basic'}>
-          <span className={`body1Strong ${selectedCategories.length > 0 ? '' : 'text-[#BDBDBD]'} mr-1`}>
+          <span className={`body1Strong ${selectedCategories.length > 0 ? '' : 'text-gray-400'} mr-1`}>
             {selectedCategories.length > 0 ? selectedCtgNames() : '선택'}
           </span>
           <Image width={12} height={12} src="/dropdown.svg" alt="dropdown" />
@@ -54,7 +54,7 @@ const Topics: FC<TopicsProps> = ({ selectedCategories, setSelectedCategories }) 
                 key={topic.id}
                 onClick={() => onToggleCategory(topic.id)}
                 className={`py-[6px] ${
-                  isSelected ? 'bg-[#BDBDBD] bg-opacity-30' : ''
+                  isSelected ? 'bg-gray-400 bg-opacity-30' : ''
                 } px-3 border rounded-4xl body1Strong`}
               >
                 {topic.content}

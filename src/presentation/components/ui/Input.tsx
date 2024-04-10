@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { VariantProps, cva } from 'class-variance-authority';
 
-import { cn } from '@/presentation/lib/utils';
+import { cn } from '@/presentation/utils/styles';
 import { Button } from './Button';
 
 const inputVariants = cva('w-full rounded-5xl py-[5px] px-4 focus:outline-none', {
@@ -38,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {props.value && (
             <Button onClick={onClearText} variant={'basic'} className="p-0 h-0 top-1/2 absolute right-0">
-              <Image src="/clearBtn.svg" alt="clear-btn" />
+              <Image src="/clearBtn.svg" alt="clear-btn" width={16} height={16} />
             </Button>
           )}
         </div>

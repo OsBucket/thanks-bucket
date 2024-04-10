@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/presentation/lib/utils';
+import { cn } from '@/presentation/utils/styles';
 import { cva, VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 import * as React from 'react';
@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-black text-white',
-        outline: 'bg-white text-black border border-[#E0E0E0]',
+        outline: 'bg-white text-black border border-gray-300',
         basic: 'bg-transparent border-none text-black'
       },
       size: {
