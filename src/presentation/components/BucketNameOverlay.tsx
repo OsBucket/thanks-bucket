@@ -10,11 +10,12 @@ import { LoadBucketTemplateList } from '@/domain/usecases';
 interface BucketNameOverlayProps {
   show: boolean;
   title?: string;
+  showTemplate?: boolean;
   closeModal: () => void;
   onSubmit: (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => void;
 }
 
-const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeModal, title }) => {
+const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeModal, title, showTemplate }) => {
   const [name, setName] = useState<string>(title ?? '');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,7 +49,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
           <Button
             onClick={() => {
               if (name.trim().length === 0) return;
-              onSubmit && onSubmit(name);
+              onSubmit?.(name);
             }}
             className="p-0"
             variant={'basic'}
@@ -74,18 +75,19 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
               className="body2Strong"
             />
           </div>
+
           <div className="flex flex-col grow pt-6 overflow-y-auto">
             <Divider />
-            <div className="grow flex flex-col px-4">
-              <div className="h-[44px] flex items-center">
-                <h2 className="text-gray-500 body1Strong">추천 버킷 리스트에서 찾아보세요 👀</h2>
-              </div>
-              {name.length > 0 && (
+            {showTemplate && (
+              <div className="grow flex flex-col px-4">
+                <div className="h-[44px] flex items-center">
+                  <h2 className="text-gray-500 body1Strong">추천 버킷 리스트에서 찾아보세요 👀</h2>
+                </div>
                 <Suspense fallback={<div>Loading ...</div>}>
-                  <BucketTemplates bucketName={name} onSelect={handleSelectTemplate} />
+                  <BucketTemplates onSelect={handleSelectTemplate} />
                 </Suspense>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </section>
       </div>

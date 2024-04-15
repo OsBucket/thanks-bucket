@@ -3,10 +3,7 @@ import { Authentication } from '@/domain/usecases';
 import { InvalidCredentialsError, UnexpectedError } from '@/domain/errors';
 
 export class RemoteAuthentication implements Authentication {
-  constructor(
-    private readonly url: string,
-    private readonly httpClient: HttpClient<RemoteAuthentication.Model>
-  ) {}
+  constructor(private readonly url: string, private readonly httpClient: HttpClient<RemoteAuthentication.Model>) {}
 
   async auth(params: Authentication.Params): Promise<Authentication.Model> {
     const httpResponse = await this.httpClient.request({

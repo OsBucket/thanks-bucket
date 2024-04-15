@@ -1,6 +1,6 @@
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -66,6 +66,8 @@ const NewBucket: FC<NewBucketProps> = () => {
       if (bucketTemplateTopics !== null) {
         const categories = bucketTemplateTopics.map((topics) => topics.id);
         setSelectedCategories(categories);
+      } else {
+        setSelectedCategories([]);
       }
       if (bucketTodoNames !== null) {
         const templateTodos = bucketTodoNames.split(', ').map((name) => ({
@@ -74,11 +76,12 @@ const NewBucket: FC<NewBucketProps> = () => {
           isDone: false
         }));
         setTodoList(templateTodos);
+      } else {
+        setTodoList([]);
       }
     } else {
       setBucketName(name);
     }
-
     setShowBucketNameModal(false);
   };
 
@@ -155,6 +158,7 @@ const NewBucket: FC<NewBucketProps> = () => {
       </section>
       {showBucketNameModal && (
         <BucketNameOverlay
+          showTemplate
           title={bucketName}
           show={showBucketNameModal}
           onSubmit={handleBucketTempleteSubmit}

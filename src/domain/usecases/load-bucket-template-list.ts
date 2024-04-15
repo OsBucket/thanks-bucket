@@ -1,11 +1,9 @@
 export interface LoadBucketTemplateList {
-  load: (query: LoadBucketTemplateList.Params) => Promise<LoadBucketTemplateList.Model[]>;
+  load: () => Promise<LoadBucketTemplateList.Model[]>;
 }
 
 export namespace LoadBucketTemplateList {
-  export type Params = {
-    bucketName: string;
-  };
+  export type Params = {};
 
   export type Model = {
     id: number;

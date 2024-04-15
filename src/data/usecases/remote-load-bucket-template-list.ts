@@ -5,11 +5,10 @@ import { LoadBucketTemplateList } from '@/domain/usecases';
 export class RemoteLoadBucketTemplateList implements LoadBucketTemplateList {
   constructor(private readonly url: string, private readonly httpClient: HttpClient<LoadBucketTemplateList.Model[]>) {}
 
-  async load(params: LoadBucketTemplateList.Params): Promise<LoadBucketTemplateList.Model[]> {
+  async load(): Promise<LoadBucketTemplateList.Model[]> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
-      method: 'get',
-      params
+      method: 'get'
     });
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
