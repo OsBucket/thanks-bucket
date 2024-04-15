@@ -1,20 +1,30 @@
 import Image from 'next/image';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/presentation/components/ui/Button';
 import { ModalWrapper } from '@/presentation/components/ui/ConfirmModal';
-import { Input } from '@/presentation/components/ui/Input';
+import { Divider, SearchInput } from '@/presentation/components/ui';
+import BucketTemplates from '@/presentation/components/BucketTemplates';
+import { LoadBucketTemplateList } from '@/domain/usecases';
 
 interface BucketNameOverlayProps {
   show: boolean;
   title?: string;
+  showTemplate?: boolean;
   closeModal: () => void;
-  onSubmit?: (name: string) => void;
+  onSubmit: (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => void;
 }
 
-const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeModal, title }) => {
+const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeModal, title, showTemplate }) => {
   const [name, setName] = useState<string>(title ?? '');
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSelectTemplate = useCallback(
+    (bucketTemplate: LoadBucketTemplateList.Model) => {
+      onSubmit(name, bucketTemplate);
+    },
+    [name, onSubmit]
+  );
 
   useEffect(() => {
     if (show) {
@@ -33,13 +43,13 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
       >
         <header className="h-[54px] px-2 flex justify-between items-center">
           <Button onClick={closeModal} className="p-0 h-[36px] w-[36px]" variant={'basic'}>
-            <Image src="/back.svg" alt="back" width={24} height={24} />
+            <Image src="/back.svg" alt="back" width={20} height={20} />
           </Button>
           <p className="body2Strong">버킷 이름</p>
           <Button
             onClick={() => {
               if (name.trim().length === 0) return;
-              onSubmit && onSubmit(name);
+              onSubmit?.(name);
             }}
             className="p-0"
             variant={'basic'}
@@ -53,19 +63,31 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
             </span>
           </Button>
         </header>
-        <section className="px-4">
-          <div className="my-2">
-            <Input
-              ref={inputRef}
-              clearBtn
+        <section className="flex flex-col h-full">
+          <div className="px-4">
+            <SearchInput
               maxLength={30}
-              onClearText={() => setName('')}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="body2Strong"
-              variant={'underline'}
+              ref={inputRef}
+              onSearch={setName}
+              defaultValue={name}
+              searchAsYouType
               placeholder="버킷 이름"
+              className="body2Strong"
             />
+          </div>
+
+          <div className="flex flex-col grow pt-6 overflow-y-auto">
+            <Divider />
+            {showTemplate && (
+              <div className="grow flex flex-col px-4">
+                <div className="h-[44px] flex items-center">
+                  <h2 className="text-gray-500 body1Strong">추천 버킷 리스트에서 찾아보세요 👀</h2>
+                </div>
+                <Suspense fallback={<div>Loading ...</div>}>
+                  <BucketTemplates onSelect={handleSelectTemplate} />
+                </Suspense>
+              </div>
+            )}
           </div>
         </section>
       </div>

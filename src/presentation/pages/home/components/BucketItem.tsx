@@ -34,7 +34,7 @@ const BucketItem: FC<BucketItemProps> = ({ bucket, selectBucket, toggleComplete,
         }}
       />
       <div className="px-2 flex flex-col flex-grow">
-        <p className="caption2Strong text-[#9E9E9E]">{bucket.goalDate}</p>
+        <p className="caption2Strong text-gray-500">{bucket.goalDate}</p>
         <p className={`${bucket.isDone ? 'line-through' : ''} body2Strong`}>{bucket.title}</p>
         <div className="caption2Strong flex mt-[2px]">
           <p className="mr-1">TO DO LIST</p>

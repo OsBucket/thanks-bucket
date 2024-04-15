@@ -13,12 +13,13 @@ import { UpdateBucketValue, getBucketById, updateBucketById } from '@/services/b
 import { Todo } from '@/domain/models/bucket-model';
 import useBackPress from '@/presentation/hooks/useBackPress';
 import Image from 'next/image';
+import { LoadBucketTemplateList } from '@/domain/usecases';
 
 const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const router = useRouter();
 
   const { data: bucket } = useQuery({
-    queryKey: ['buckets'],
+    queryKey: ['buckets', bucketId],
     queryFn: () => getBucketById(bucketId)
   });
 
@@ -31,7 +32,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const [showSucessSnackbar, setShowSucessSnackbar] = useState(false);
   const [showBucketNameModal, setShowBucketNameModal] = useState(false);
 
-  const submitBucket = async () => {
+  const handleBucketSubmit = async () => {
     if (bucket === undefined) return;
     const bucketTodos = newTodo.trim().length
       ? [
@@ -59,6 +60,29 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
     goHome();
   };
 
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+    if (bucketTemplate !== undefined) {
+      const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
+      setBucketName(bucketName);
+      if (bucketTemplateTopics !== null) {
+        const categories = bucketTemplateTopics.map((topics) => topics.id);
+        setSelectedCategories(categories);
+      }
+      if (bucketTodoNames !== null) {
+        const templateTodos = bucketTodoNames.split(', ').map((name) => ({
+          id: Date.now(),
+          content: name,
+          isDone: false
+        }));
+        setTodoList(templateTodos);
+      }
+    } else {
+      setBucketName(name);
+    }
+
+    setShowBucketNameModal(false);
+  };
+
   const goHome = () => {
     router.push('/');
   };
@@ -74,15 +98,18 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
 
   useBackPress({
     backPressed: () => {
-      if (showBucketNameModal) setShowBucketNameModal(false);
-      else goHome();
+      if (showBucketNameModal) {
+        setShowBucketNameModal(false);
+      } else {
+        goHome();
+      }
     },
     showOverlay: showBucketNameModal
   });
 
   return (
     <main className="max-w-[450px] px-4">
-      <header className="h-14 relative flex justify-center items-center">
+      <header className="h-[54px] relative flex justify-center items-center">
         <Button onClick={goHome} className="absolute left-0 p-0" variant={'basic'}>
           <Image width={20} height={20} src="/close.svg" alt="close-btn" />
         </Button>
@@ -114,15 +141,21 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
 
         <div className="mt-6 py-2">
           <p className="body2Strong mb-1">TO DO LIST</p>
-          <p className="caption1 text-[#424242]">구체적인 액션 플랜을 세우면 목표 달성률이 높아진다는 사실,</p>
-          <p className="caption1 text-[#424242]">알고 계신가요? 버킷 달성을 위한 할 일을 계획해보세요.</p>
+          <p className="caption1 text-gray-800">
+            구체적인 액션 플랜을 세우면 목표 달성률이 높아진다는 사실, <br />
+            알고 계신가요? 버킷 달성을 위한 할 일을 계획해보세요.
+          </p>
         </div>
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
 
           <div className="fixed bottom-0 w-full max-w-[450px] left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
-              <Button onClick={submitBucket} disabled={bucketName?.trim().length === 0 || !dueDate} className="w-full">
+              <Button
+                onClick={handleBucketSubmit}
+                disabled={bucketName?.trim().length === 0 || !dueDate}
+                className="w-full"
+              >
                 수정완료
               </Button>
             </div>
@@ -133,10 +166,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
         <BucketNameOverlay
           title={bucketName}
           show={showBucketNameModal}
-          onSubmit={(name) => {
-            setBucketName(name);
-            setShowBucketNameModal(false);
-          }}
+          onSubmit={handleBucketTempleteSubmit}
           closeModal={() => {
             setShowBucketNameModal(false);
           }}

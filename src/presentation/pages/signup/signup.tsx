@@ -128,7 +128,7 @@ const Signup: FC = () => {
               placeholder="아이디"
             />
           </div>
-          <p className={`caption1Strong ${errors.id ? 'text-error' : 'text-[#9E9E9E]'}`}>
+          <p className={`caption1Strong ${errors.id ? 'text-red-500' : 'text-gray-500'}`}>
             영어 소문자, 숫자로 최대 10자까지 가능해요.
           </p>
         </div>
@@ -161,7 +161,7 @@ const Signup: FC = () => {
             />
           </div>
           {getValues('password') && (
-            <p className={`caption1Strong ${isPasswordSame && !errors.password ? 'text-[#00C400]' : 'text-error'}`}>
+            <p className={`caption1Strong ${isPasswordSame && !errors.password ? 'text-green-500' : 'text-red-500'}`}>
               {!isPasswordSame
                 ? '입력하신 두 비밀번호가 달라요'
                 : errors.password
@@ -189,7 +189,7 @@ const Signup: FC = () => {
             </div>
             <Image src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
           </div>
-          <p className={`caption1Strong ${errors.nickname ? 'text-error' : 'text-[#9E9E9E]'}`}>
+          <p className={`caption1Strong ${errors.nickname ? 'text-red-500' : 'text-gray-500'}`}>
             한글, 영어, 숫자로 2~8자까지 가능해요.
           </p>
         </div>

@@ -1,6 +1,6 @@
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -11,10 +11,11 @@ import { Todo } from '@/domain/models/bucket-model';
 import { addBucket } from '@/services/bucket';
 import BucketNameOverlay from '@/presentation/components/BucketNameOverlay';
 import Topics from '@/presentation/components/Topics';
+import { LoadBucketTemplateList } from '@/domain/usecases';
 
-interface NewProps {}
+interface NewBucketProps {}
 
-const NewBucket: FC<NewProps> = () => {
+const NewBucket: FC<NewBucketProps> = () => {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -27,18 +28,6 @@ const NewBucket: FC<NewProps> = () => {
   const [showSucessSnackbar, setShowSucessSnackbar] = useState(false);
   const [showBucketNameModal, setShowBucketNameModal] = useState(false);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useBackPress({
-    backPressed: () => {
-      if (showBucketNameModal) setShowBucketNameModal(false);
-      else goHome();
-    },
-    showOverlay: showBucketNameModal
-  });
-
   const resetForm = () => {
     setBucketName('');
     setDueDate('2024-12-31');
@@ -47,7 +36,7 @@ const NewBucket: FC<NewProps> = () => {
     setNewTodo('');
   };
 
-  const submitBucket = async () => {
+  const handleBucketSubmit = async () => {
     const filteredTodoList = todoList.map((todo) => ({
       content: todo.content,
       isDone: todo.isDone
@@ -70,13 +59,50 @@ const NewBucket: FC<NewProps> = () => {
     }
   };
 
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+    if (bucketTemplate !== undefined) {
+      const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
+      setBucketName(bucketName);
+      if (bucketTemplateTopics !== null) {
+        const categories = bucketTemplateTopics.map((topics) => topics.id);
+        setSelectedCategories(categories);
+      } else {
+        setSelectedCategories([]);
+      }
+      if (bucketTodoNames !== null) {
+        const templateTodos = bucketTodoNames.split(', ').map((name) => ({
+          id: Date.now(),
+          content: name,
+          isDone: false
+        }));
+        setTodoList(templateTodos);
+      } else {
+        setTodoList([]);
+      }
+    } else {
+      setBucketName(name);
+    }
+    setShowBucketNameModal(false);
+  };
+
   const goHome = () => {
     router.push('/');
   };
 
+  useBackPress({
+    backPressed: () => {
+      if (showBucketNameModal) {
+        setShowBucketNameModal(false);
+      } else {
+        goHome();
+      }
+    },
+    showOverlay: showBucketNameModal
+  });
+
   return (
     <main className="max-w-[450px] px-4">
-      <header className="h-14 flex items-center">
+      <header className="h-[54px] flex items-center">
         <Button onClick={goHome} className="p-0" variant={'basic'}>
           <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
         </Button>
@@ -107,18 +133,23 @@ const NewBucket: FC<NewProps> = () => {
 
         <div className="mt-6 py-2">
           <p className="body2Strong mb-1">TO DO LIST</p>
-          <p className="caption1 text-[#424242]">구체적인 액션 플랜을 세우면 목표 달성률이 높아진다는 사실,</p>
-          <p className="caption1 text-[#424242]">알고 계신가요? 버킷 달성을 위한 할 일을 계획해보세요.</p>
+          <p className="caption1 text-gray-800">
+            구체적인 액션 플랜을 세우면 목표 달성률이 높아진다는 사실, <br />
+            알고 계신가요? 버킷 달성을 위한 할 일을 계획해보세요.
+          </p>
         </div>
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
-
           <div className="fixed bottom-0 w-full max-w-[450px] left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
               <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
                 <span className="subTitle2 ">마이버킷 이동</span>
               </Button>
-              <Button onClick={submitBucket} disabled={bucketName.trim().length === 0 || !dueDate} className="w-full">
+              <Button
+                onClick={handleBucketSubmit}
+                disabled={bucketName.trim().length === 0 || !dueDate}
+                className="w-full"
+              >
                 <span className="subTitle2">버킷 만들기</span>
               </Button>
             </div>
@@ -127,19 +158,17 @@ const NewBucket: FC<NewProps> = () => {
       </section>
       {showBucketNameModal && (
         <BucketNameOverlay
+          showTemplate
           title={bucketName}
           show={showBucketNameModal}
-          onSubmit={(name) => {
-            setBucketName(name);
-            setShowBucketNameModal(false);
-          }}
+          onSubmit={handleBucketTempleteSubmit}
           closeModal={() => {
             setShowBucketNameModal(false);
           }}
         />
       )}
       <Snackbar show={showSucessSnackbar} closeSnackbar={() => setShowSucessSnackbar(false)}>
-        <Button onClick={goHome} size={'basic'} className="text-[#CE95F8]" variant={'basic'}>
+        <Button onClick={goHome} size={'basic'} className="text-purple-300" variant={'basic'}>
           보러가기
         </Button>
       </Snackbar>
