@@ -39,7 +39,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
     <ModalWrapper>
       <div
         onClick={backdropClick}
-        className="bg-[#2f2f2f] bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
+        className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
       >
         <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-3xl bg-white p-5 min-w-[300px]">
           {children ? (

@@ -37,6 +37,7 @@ const Login: FC<Props> = ({ authentication }) => {
   const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
     try {
       await authentication.auth(data);
+
       router.push('/');
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {

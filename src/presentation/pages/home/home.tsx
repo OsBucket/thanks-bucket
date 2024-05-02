@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +8,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomModal from '@/presentation/components/ui/BottomModal';
 import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
-
 import { Button } from '@/presentation/components/ui/Button';
 import { deleteBucketById, getBuckets, updateBucketById } from '@/services/bucket';
 import { getProfile, logout } from '@/services/user';
@@ -15,13 +15,13 @@ import { Bucket } from '@/domain/models/bucket-model';
 import DetailOverlay from './components/DetailOverlay';
 import BucketList from './components/BucketList';
 import Loading from '@/presentation/components/ui/Loading';
-import Image from 'next/image';
+import { useDisclosure } from '@/presentation/hooks/use-disclosure';
 
 function Home() {
   const queryClient = useQueryClient();
 
-  const { data: bucketList, isLoading } = useQuery({ queryKey: ['buckets'], queryFn: getBuckets });
   const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
+  const { data: bucketList, isLoading } = useQuery({ queryKey: ['buckets'], queryFn: getBuckets });
 
   const mutation = useMutation({
     mutationFn: deleteBucketById,
@@ -38,16 +38,14 @@ function Home() {
   });
 
   const router = useRouter();
-
   const [showClapping, setShowClapping] = useState<boolean>(false);
   const [selectedBucket, setSelectedBucket] = useState<Bucket | null>(null);
   const [selectedMoreBtn, setSelectedMoreBtn] = useState<Bucket | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-  const [showSucessSnackbar, setShowSucessSnackbar] = useState({
-    show: false,
-    message: ''
-  });
+  const deleteModal = useDisclosure();
+  const bottomModal = useDisclosure();
+
+  const [showSucessSnackbar, setShowSucessSnackbar] = useState({ show: false, message: '' });
 
   const selectBucket = (bucket: Bucket) => {
     setSelectedBucket(bucket);
@@ -73,6 +71,7 @@ function Home() {
   };
 
   const clickMoreBtn = (bucket: Bucket) => {
+    bottomModal.onOpen();
     setSelectedMoreBtn(bucket);
   };
 
@@ -84,7 +83,7 @@ function Home() {
   const deleteBucket = async () => {
     mutation.mutate(Number(selectedMoreBtn?.id));
     setSelectedMoreBtn(null);
-    setShowDeleteModal(false);
+    deleteModal.onClose();
     setShowSucessSnackbar({ show: true, message: '버킷이 삭제되었어요' });
   };
 
@@ -130,9 +129,11 @@ function Home() {
         <section>
           {bucketList?.length === 0 && (
             <div className="py-14 flex flex-col justify-center items-center">
-              <Image src="/images/icons/home-empty.svg" alt="" />
-              <p className="body2Strong text-[#9E9E9E] mt-3">2024년에 이루고 싶은</p>
-              <p className="body2Strong text-[#9E9E9E]">버킷을 만들어 볼까요?</p>
+              <Image src="/images/icons/home-empty.svg" width={40} height={40} alt="home-empty" />
+              <p className="body2Strong text-gray-500 mt-3">
+                2024년에 이루고 싶은 <br />
+                버킷을 만들어 볼까요?
+              </p>
             </div>
           )}
           {bucketList && bucketList.length > 0 && (
@@ -167,16 +168,15 @@ function Home() {
             closeOverlay={() => setSelectedBucket(null)}
           />
         )}
-
-        {showDeleteModal && (
-          <ConfirmModal closeModal={() => setShowDeleteModal(false)}>
+        {deleteModal.isOpen && (
+          <ConfirmModal closeModal={deleteModal.onClose}>
             <div className="text-center">
               <p className="subTitle1">{`'${selectedMoreBtn?.title}'`}</p>
               <p className="subTitle1">버킷을 지우시겠어요?</p>
               <p className="body1 mt-1">버킷을 지우면 다시 복구할 수 없어요</p>
             </div>
             <div className="flex justify-center mt-4">
-              <Button onClick={() => setShowDeleteModal(false)} className="w-full mr-2" variant={'outline'}>
+              <Button onClick={deleteModal.onClose} className="w-full mr-2" variant={'outline'}>
                 닫기
               </Button>
               <Button onClick={deleteBucket} className="w-full">
@@ -185,11 +185,13 @@ function Home() {
             </div>
           </ConfirmModal>
         )}
-
         <BottomModal
-          show={selectedMoreBtn !== null}
-          closeModal={() => setSelectedMoreBtn(null)}
           bucket={selectedMoreBtn!}
+          show={bottomModal.isOpen}
+          closeModal={() => {
+            bottomModal.onClose();
+            setSelectedMoreBtn(null);
+          }}
         >
           <ul className="body2Strong mb-12">
             <li
@@ -200,7 +202,8 @@ function Home() {
             </li>
             <li
               onClick={() => {
-                setShowDeleteModal(true);
+                deleteModal.onOpen();
+                bottomModal.onClose();
               }}
               className="flex items-center h-14 cursor-pointer"
             >

@@ -104,7 +104,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
     <ModalWrapper>
       <div
         onClick={backdropClick}
-        className="bg-[#2f2f2f] bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
+        className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
       >
         <div
           className="z-50 absolute top-1/2 -translate-y-1/2 left-1/2
@@ -117,7 +117,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
             </Button>
           </div>
           <div className="text-center max-h-[200px] overflow-y-scroll">
-            <p className="body2Strong text-[#9E9E9E] mb-1">{`${
+            <p className="body2Strong text-gray-500 mb-1">{`${
               bucket.goalDate ? bucket.goalDate.replace(/-/gi, '.') : ''
             }까지`}</p>
             <p className="title3">{bucket.title}</p>
@@ -138,7 +138,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
             ) : (
               <div className="py-5 flex flex-col justify-center items-center mt-2 h-[112px]">
                 <Image width={40} height={40} src="/check-list.svg" alt="check-list" />
-                <p className="mt-2 caption1Strong text-text-textGray">상세 할 일을 정하지 않았어요</p>
+                <p className="mt-2 caption1Strong text-gray-500">상세 할 일을 정하지 않았어요</p>
               </div>
             )}
           </div>

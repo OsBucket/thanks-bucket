@@ -2,6 +2,7 @@ export type HttpRequest = {
   url: string;
   method: HttpMethod;
   body?: any;
+  params?: any;
   headers?: any;
 };
 
