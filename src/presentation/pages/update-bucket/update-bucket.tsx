@@ -14,6 +14,7 @@ import { Todo } from '@/domain/models/bucket-model';
 import useBackPress from '@/presentation/hooks/useBackPress';
 import Image from 'next/image';
 import { LoadBucketTemplateList } from '@/domain/usecases';
+import { Close } from '@/presentation/components/common/vectors';
 
 const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const router = useRouter();
@@ -111,7 +112,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
     <main className="max-w-[450px] px-4">
       <header className="h-[54px] relative flex justify-center items-center">
         <Button onClick={goHome} className="absolute left-0 p-0" variant={'basic'}>
-          <Image width={20} height={20} src="/close.svg" alt="close-btn" />
+          <Close />
         </Button>
         <h1 className="text-center body2Strong">버킷 수정</h1>
       </header>

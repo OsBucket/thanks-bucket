@@ -1,4 +1,4 @@
-import axiosInstance from './axiosInstance';
+import { api } from './axiosInstance';
 
 type SignupParams = {
   memberId: string;
@@ -22,18 +22,18 @@ export async function getProfile(): Promise<{
   nickname: string;
   memberId: number;
 }> {
-  const res = await axiosInstance.get('/auth/profile');
+  const res = await api.client.get('/auth/profile');
   return res.data;
 }
 
 export async function loginUser(memberId: string, password: string) {
-  return axiosInstance.post('/auth/login', {
+  return api.client.post('/auth/login', {
     memberId,
     password
   });
 }
 export async function signupUser({ memberId, password, nickname, birthday, occupationId }: SignupParams) {
-  return axiosInstance.post('/auth/signup', {
+  return api.client.post('/auth/signup', {
     memberId,
     password,
     nickname,
@@ -43,9 +43,9 @@ export async function signupUser({ memberId, password, nickname, birthday, occup
 }
 
 export async function profileUser() {
-  return axiosInstance.get('/auth/profile');
+  return api.client.get('/auth/profile');
 }
 
 export async function logout() {
-  return axiosInstance.get('/auth/logout');
+  return api.client.get('/auth/logout');
 }

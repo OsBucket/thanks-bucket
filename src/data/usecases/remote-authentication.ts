@@ -1,6 +1,7 @@
 import { HttpClient, HttpStatusCode } from '@/data/protocols/http';
 import { Authentication } from '@/domain/usecases';
 import { InvalidCredentialsError, UnexpectedError } from '@/domain/errors';
+import { api } from '@/services/axiosInstance';
 
 export class RemoteAuthentication implements Authentication {
   constructor(private readonly url: string, private readonly httpClient: HttpClient<RemoteAuthentication.Model>) {}
@@ -13,6 +14,10 @@ export class RemoteAuthentication implements Authentication {
     });
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
+        const { accessToken } = httpResponse.body || {};
+        if (accessToken) {
+          api.authStateChanged(accessToken);
+        }
         return httpResponse.body!;
       case HttpStatusCode.unauthorized:
         throw new InvalidCredentialsError();

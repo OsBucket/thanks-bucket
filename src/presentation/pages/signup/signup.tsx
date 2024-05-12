@@ -1,8 +1,6 @@
 import { loginUser, signupUser } from '@/services/user';
-import { Button } from '@/presentation/components/ui/Button';
+import { Input, Button, ConfirmModal } from '@/presentation/components/ui';
 import Checkbox from '@/presentation/components/ui/Checkbox';
-import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
-import { Input } from '@/presentation/components/ui/Input';
 import { FC, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -53,16 +51,6 @@ const Signup: FC = () => {
 
   watch();
 
-  useEffect(() => {
-    const value = year;
-    if (value?.match(/[^0-9]/i)) {
-      setYear(value.replace(/[^0-9]/i, ''));
-    }
-    if (value?.length && value.length > 4) {
-      setYear(year?.slice(0, 4));
-    }
-  }, [year]);
-
   const onChangeAgree = (id: string, checked: boolean) => {
     if (id === 'all') {
       setAgree((prev) => {
@@ -107,6 +95,16 @@ const Signup: FC = () => {
   const isPasswordSame = watch('password') === watch('passwordConfirm');
 
   const isAgreed = () => agree.agreement;
+
+  useEffect(() => {
+    const value = year;
+    if (value?.match(/[^0-9]/i)) {
+      setYear(value.replace(/[^0-9]/i, ''));
+    }
+    if (value?.length && value.length > 4) {
+      setYear(year?.slice(0, 4));
+    }
+  }, [year]);
 
   return (
     <main className="max-w-[450px] px-4">
@@ -187,7 +185,7 @@ const Signup: FC = () => {
                 placeholder="닉네임 혹은 이름"
               />
             </div>
-            <Image src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
+            <Image width={90} height={24} src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
           </div>
           <p className={`caption1Strong ${errors.nickname ? 'text-red-500' : 'text-gray-500'}`}>
             한글, 영어, 숫자로 2~8자까지 가능해요.

@@ -1,8 +1,9 @@
+'use client';
+
 import { makeLoginValidation } from '@/main/factories/validation';
 import { makeRemoteAuthentication } from '@/main/factories/usecases';
-import dynamic from 'next/dynamic';
+import { Login } from '@/presentation/pages';
 
-const Login = dynamic(() => import('@/presentation/pages/login/login'), { ssr: false });
 export const makeLogin = () => {
   return <Login authentication={makeRemoteAuthentication()} validation={makeLoginValidation()} />;
 };

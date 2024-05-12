@@ -1,6 +1,5 @@
 import { FC, useEffect } from 'react';
-
-import { ModalWrapper } from './ConfirmModal';
+import { Portal } from '.';
 
 interface SnackbarProps {
   children?: React.ReactNode;
@@ -20,17 +19,19 @@ export const Snackbar: FC<SnackbarProps> = ({ show, closeSnackbar, delay = 1500,
   }, [show, closeSnackbar, delay]);
 
   return (
-    <ModalWrapper>
-      <div
-        className={`${
-          show ? 'opacity-100' : 'opacity-0'
-        } fixed bottom-24 left-1/2  w-full max-w-[450px] -translate-x-1/2`}
-      >
-        <div className="flex items-center justify-between  bg-black rounded-xl p-3 mx-4">
-          <p className="body1 text-white">{message ? message : '내 버킷리스트에 추가되었어요'}</p>
-          {children && children}
+    show && (
+      <Portal>
+        <div
+          className={`${
+            show ? 'opacity-100' : 'opacity-0'
+          } fixed bottom-24 left-1/2  w-full max-w-[450px] -translate-x-1/2`}
+        >
+          <div className="flex items-center justify-between  bg-black rounded-xl p-3 mx-4">
+            <p className="body1 text-white">{message ? message : '내 버킷리스트에 추가되었어요'}</p>
+            {children && children}
+          </div>
         </div>
-      </div>
-    </ModalWrapper>
+      </Portal>
+    )
   );
 };

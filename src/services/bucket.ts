@@ -1,6 +1,7 @@
 import { Bucket, BucketTopic } from '@/domain/models/bucket-model';
-import axiosInstance from './axiosInstance';
+
 import { Occupation } from '@/domain/models/user-model';
+import { api } from './axiosInstance';
 
 type PostBucketParams = {
   title: string;
@@ -17,16 +18,19 @@ export type UpdateBucketValue = Bucket & {
 };
 
 export async function getBuckets(): Promise<Bucket[]> {
-  const res = await axiosInstance.get('/buckets');
+  const res = await api.client.get('/buckets', {
+    withCredentials: false
+  });
+
   return res.data;
 }
 export async function getBucketById(id: number): Promise<Bucket> {
-  const res = await axiosInstance.get(`/buckets/${id}`);
+  const res = await api.client.get(`/buckets/${id}`);
   return res.data;
 }
 
 export async function addBucket({ title, goalDate, topicIds, bucketTodos }: PostBucketParams) {
-  return axiosInstance.post('/buckets', {
+  return api.client.post('/buckets', {
     title,
     goalDate,
     topicIds,
@@ -35,19 +39,19 @@ export async function addBucket({ title, goalDate, topicIds, bucketTodos }: Post
 }
 
 export async function deleteBucketById(id: number) {
-  return axiosInstance.delete(`/buckets/${id}`);
+  return api.client.delete(`/buckets/${id}`);
 }
 
 export async function updateBucketById(bucket: UpdateBucketValue) {
-  return axiosInstance.put(`/buckets/${bucket.id}`, bucket);
+  return api.client.put(`/buckets/${bucket.id}`, bucket);
 }
 
 export async function getTopics(): Promise<BucketTopic[]> {
-  const res = await axiosInstance.get('/topics');
+  const res = await api.client.get('/topics');
   return res.data;
 }
 
 export async function getOccupations(): Promise<Occupation[]> {
-  const res = await axiosInstance.get('/occupations');
+  const res = await api.client.get('/occupations');
   return res.data;
 }

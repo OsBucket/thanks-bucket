@@ -6,16 +6,16 @@ import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import BottomModal from '@/presentation/components/ui/BottomModal';
-import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
+
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
 import { Button } from '@/presentation/components/ui/Button';
 import { deleteBucketById, getBuckets, updateBucketById } from '@/services/bucket';
-import { getProfile, logout } from '@/services/user';
+import { getProfile } from '@/services/user';
 import { Bucket } from '@/domain/models/bucket-model';
 import DetailOverlay from './components/DetailOverlay';
 import BucketList from './components/BucketList';
-import Loading from '@/presentation/components/ui/Loading';
 import { useDisclosure } from '@/presentation/hooks/use-disclosure';
+import { Loading, ConfirmModal } from '@/presentation/components/ui';
 
 function Home() {
   const queryClient = useQueryClient();
@@ -87,11 +87,6 @@ function Home() {
     setShowSucessSnackbar({ show: true, message: '버킷이 삭제되었어요' });
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.push('/login');
-  };
-
   useEffect(() => {
     const updateBucket = window.sessionStorage.getItem('updatedBucket');
     if (updateBucket) {
@@ -103,12 +98,6 @@ function Home() {
   return (
     <div className="px-4">
       <Loading show={isLoading} />
-      <header className="h-[54px] flex justify-between items-center">
-        <Image width={90} height={20} src="/images/icons/main-icon-gray.svg" alt="main-icon" />
-        <Button size={'sm'} onClick={handleLogout} className="body1Strong" variant={'outline'}>
-          로그아웃
-        </Button>
-      </header>
       <main className="relative">
         <div className="py-2 text-center">
           <div className="flex justify-center ">
@@ -145,7 +134,7 @@ function Home() {
             />
           )}
         </section>
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2">
+        <div className="fixed bottom-[66px] left-1/2 -translate-x-1/2">
           <Button onClick={() => router.push('/new')}>
             <Image width={16} height={16} src="/images/icons/write.svg" alt="write" />
             <span className="ml-1 subTitle2">버킷 만들기</span>

@@ -1,6 +1,5 @@
-import dynamic from 'next/dynamic';
+import Signup from '@/presentation/pages/signup/signup';
 
-const Signup = dynamic(() => import('@/presentation/pages/signup/signup'), { ssr: false });
 export const makeSignup = () => {
   return <Signup />;
 };

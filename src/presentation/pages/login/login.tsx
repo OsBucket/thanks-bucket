@@ -3,12 +3,12 @@
 import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Authentication } from '@/domain/usecases';
 import { Validation } from '@/presentation/protocols';
-import { Input } from '@/presentation/components/ui/Input';
-import { Button } from '@/presentation/components/ui/Button';
-import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
+import { Input, Button, ConfirmModal } from '@/presentation/components/ui';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { InvalidCredentialsError } from '@/domain/errors';
 
@@ -80,12 +80,14 @@ const Login: FC<Props> = ({ authentication }) => {
           />
         </div>
         <div className="mt-5">
-          <Button className="w-full">
+          <Button type="submit" className="w-full">
             <span className="subTitle2">로그인</span>
           </Button>
-          <Button onClick={() => router.push('/signup')} className="mt-3 w-full" variant={'outline'}>
-            <span className="subTitle2">회원가입</span>
-          </Button>
+          <Link href={'/signup'}>
+            <Button className="mt-3 w-full" variant={'outline'}>
+              <span className="subTitle2">회원가입</span>
+            </Button>
+          </Link>
         </div>
       </form>
       {showErrorModal && (

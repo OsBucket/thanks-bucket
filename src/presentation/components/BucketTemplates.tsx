@@ -1,6 +1,6 @@
 import { LoadBucketTemplateList } from '@/domain/usecases';
 import { makeRemoteLoadBucketTemplateList } from '@/main/factories/usecases';
-import { Divider } from '@/presentation/components/ui';
+import { Divider } from '@/presentation/components/common';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 interface BucketTemplatesProps {

@@ -32,9 +32,7 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/images/icons/main-icon.svg" />
       </head>
       <body className={inter.className}>
-        <ReactQueryContext>
-          <div className="max-w-[450px] mx-auto">{children}</div>
-        </ReactQueryContext>
+        <ReactQueryContext>{children}</ReactQueryContext>
       </body>
     </html>
   );

@@ -1,11 +1,11 @@
-import Image from 'next/image';
 import { FC, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { Button } from '@/presentation/components/ui/Button';
-import { ModalWrapper } from '@/presentation/components/ui/ConfirmModal';
-import { Divider, SearchInput } from '@/presentation/components/ui';
+import { Button, Portal } from '@/presentation/components/ui';
+import { Divider, SearchInput } from '@/presentation/components/common';
 import BucketTemplates from '@/presentation/components/BucketTemplates';
 import { LoadBucketTemplateList } from '@/domain/usecases';
+import MobileHeader from './common/mobile-header';
+import { Back } from './common/vectors';
 
 interface BucketNameOverlayProps {
   show: boolean;
@@ -26,6 +26,11 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
     [name, onSubmit]
   );
 
+  const handleComplete = () => {
+    if (name.trim().length === 0) return;
+    onSubmit?.(name);
+  };
+
   useEffect(() => {
     if (show) {
       inputRef.current?.focus();
@@ -33,7 +38,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
   }, [show]);
 
   return (
-    <ModalWrapper>
+    <Portal>
       <div
         className={`${
           show
@@ -41,29 +46,22 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
             : 'w-0 h-0 opacity-0'
         } bg-white duration-200`}
       >
-        <header className="h-[54px] px-2 flex justify-between items-center">
-          <Button onClick={closeModal} className="p-0 h-[36px] w-[36px]" variant={'basic'}>
-            <Image src="/back.svg" alt="back" width={20} height={20} />
-          </Button>
-          <p className="body2Strong">버킷 이름</p>
-          <Button
-            onClick={() => {
-              if (name.trim().length === 0) return;
-              onSubmit?.(name);
-            }}
-            className="p-0"
-            variant={'basic'}
-          >
-            <span
-              className={`body2 ${
-                name.trim().length === 0 ? 'text-gray-500 cursor-default' : 'body2Strong text-blue-400'
-              }`}
-            >
-              완료
-            </span>
-          </Button>
-        </header>
-        <section className="flex flex-col h-full">
+        <MobileHeader
+          headerLeft={<Back onClick={closeModal} />}
+          headerRight={
+            <Button onClick={handleComplete} className="p-0" variant={'basic'}>
+              <span
+                className={`body2 ${
+                  name.trim().length === 0 ? 'text-gray-500 cursor-default' : 'body2Strong text-blue-400'
+                }`}
+              >
+                완료
+              </span>
+            </Button>
+          }
+          title="버킷 이름"
+        />
+        <section className="pt-[56px] flex flex-col h-full">
           <div className="px-4">
             <SearchInput
               maxLength={30}
@@ -91,7 +89,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
           </div>
         </section>
       </div>
-    </ModalWrapper>
+    </Portal>
   );
 };
 

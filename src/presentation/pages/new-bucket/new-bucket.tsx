@@ -2,7 +2,6 @@ import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { FC, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
 import TodoList from '@/presentation/components/TodoList';
@@ -102,11 +101,6 @@ const NewBucket: FC<NewBucketProps> = () => {
 
   return (
     <main className="max-w-[450px] px-4">
-      <header className="h-[54px] flex items-center">
-        <Button onClick={goHome} className="p-0" variant={'basic'}>
-          <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
-        </Button>
-      </header>
       <section>
         <h1 className="subTitle1 my-5">2024년에 무엇을 이루고 싶으세요?</h1>
         <Input
