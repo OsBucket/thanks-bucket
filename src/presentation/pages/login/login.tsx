@@ -11,6 +11,7 @@ import { Input, Button, ConfirmModal } from '@/presentation/components/ui';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { InvalidCredentialsError } from '@/domain/errors';
+import { FullHeightPage } from '@/presentation/components/common';
 
 type Props = {
   validation: Validation;
@@ -53,11 +54,11 @@ const Login: FC<Props> = ({ authentication }) => {
   };
 
   return (
-    <main className="text-center max-w-[450px] px-4">
+    <FullHeightPage className="px-4">
       <div className="flex justify-center mt-20">
         <Image width={162} height={36} src="images/icons/main-icon.svg" alt="main-icon" />
       </div>
-      <div className="mt-5">
+      <div className="mt-5 text-center">
         <p className="body1">꿈꾸는 것, 도전하고 싶은 것</p>
         <p className="body2Strong">하나씩 이뤄가는 누군가의 버킷리스트</p>
       </div>
@@ -118,7 +119,7 @@ const Login: FC<Props> = ({ authentication }) => {
           </ConfirmModal>
         </>
       )}
-    </main>
+    </FullHeightPage>
   );
 };
 

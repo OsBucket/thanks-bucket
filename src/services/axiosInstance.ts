@@ -18,11 +18,6 @@ class Api {
     this.client.interceptors.response.use(
       (response) => response.data,
       (error: AxiosError) => {
-        const { status } = error.response || {};
-
-        if (window.location.pathname !== '/login' && (status === 401 || status === 400)) {
-          // window.location.href = '/login';
-        }
         return Promise.reject(error);
       }
     );

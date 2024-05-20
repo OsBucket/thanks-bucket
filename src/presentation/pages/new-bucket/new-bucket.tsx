@@ -100,7 +100,7 @@ const NewBucket: FC<NewBucketProps> = () => {
   });
 
   return (
-    <main className="max-w-[450px] px-4">
+    <main>
       <section>
         <h1 className="subTitle1 my-5">2024년에 무엇을 이루고 싶으세요?</h1>
         <Input
@@ -134,7 +134,7 @@ const NewBucket: FC<NewBucketProps> = () => {
         </div>
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
-          <div className="fixed bottom-0 w-full max-w-[450px] left-1/2 -translate-x-1/2">
+          <div className="fixed bottom-0 w-full left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
               <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
                 <span className="subTitle2 ">마이버킷 이동</span>

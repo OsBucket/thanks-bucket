@@ -12,9 +12,7 @@ import { Input } from '@/presentation/components/ui/Input';
 import { UpdateBucketValue, getBucketById, updateBucketById } from '@/services/bucket';
 import { Todo } from '@/domain/models/bucket-model';
 import useBackPress from '@/presentation/hooks/useBackPress';
-import Image from 'next/image';
 import { LoadBucketTemplateList } from '@/domain/usecases';
-import { Close } from '@/presentation/components/common/vectors';
 
 const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const router = useRouter();
@@ -109,13 +107,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   });
 
   return (
-    <main className="max-w-[450px] px-4">
-      <header className="h-[54px] relative flex justify-center items-center">
-        <Button onClick={goHome} className="absolute left-0 p-0" variant={'basic'}>
-          <Close />
-        </Button>
-        <h1 className="text-center body2Strong">버킷 수정</h1>
-      </header>
+    <main>
       <section>
         <Input
           value={bucketName ?? ''}
@@ -150,7 +142,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
 
-          <div className="fixed bottom-0 w-full max-w-[450px] left-1/2 -translate-x-1/2">
+          <div className="fixed bottom-0 w-full left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
               <Button
                 onClick={handleBucketSubmit}

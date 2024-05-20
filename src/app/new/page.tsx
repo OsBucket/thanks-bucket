@@ -11,5 +11,9 @@ export default function NewBucketPage() {
     router.push('/');
   };
 
-  return <FullHeightDialog onGoback={handleGoBack}>{makeNewBucket()}</FullHeightDialog>;
+  return (
+    <FullHeightDialog title="버킷 생성" onGoback={handleGoBack}>
+      {makeNewBucket()}
+    </FullHeightDialog>
+  );
 }

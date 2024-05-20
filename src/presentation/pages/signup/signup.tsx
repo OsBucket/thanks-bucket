@@ -107,7 +107,7 @@ const Signup: FC = () => {
   }, [year]);
 
   return (
-    <main className="max-w-[450px] px-4">
+    <main className="px-4">
       <h1 className="title3 py-5"> 시작이 반, 계정 만들기</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div>

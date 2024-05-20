@@ -41,9 +41,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
     <Portal>
       <div
         className={`${
-          show
-            ? 'fixed top-0 left-1/2 -translate-x-1/2 z-50 w-screen h-screen max-w-[450px] opacity-100'
-            : 'w-0 h-0 opacity-0'
+          show ? 'fixed top-0 left-1/2 -translate-x-1/2 z-50 w-screen h-screen opacity-100' : 'w-0 h-0 opacity-0'
         } bg-white duration-200`}
       >
         <MobileHeader
