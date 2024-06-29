@@ -83,7 +83,7 @@ const Signup: FC = () => {
       },
       { headers: { Authorization: accessToken } }
     )
-      .then(() => router.push('/'))
+      .then(() => router.push(`/${data.nickname}`))
       .catch((e) => {
         if (e.response?.data.message === '이미 존재하는 회원입니다.') {
           setIdDuplicationErr(true);

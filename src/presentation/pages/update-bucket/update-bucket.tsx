@@ -12,6 +12,7 @@ import { Input } from '@/presentation/components/ui/Input';
 import { BucketTemplate, UpdateBucketValue, getBucketById, updateBucketById } from '@/services/bucket';
 import { Todo } from '@/domain/models/bucket-model';
 import useBackPress from '@/presentation/hooks/useBackPress';
+import { getProfile } from '@/services/user';
 
 const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const router = useRouter();
@@ -19,6 +20,11 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const { data: bucket } = useQuery({
     queryKey: ['buckets', bucketId],
     queryFn: () => getBucketById(bucketId)
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile
   });
 
   const [bucketName, setBucketName] = useState<string>('');
@@ -82,7 +88,9 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   };
 
   const goHome = () => {
-    router.push('/');
+    if (profile !== undefined) {
+      router.push(`/${profile.nickname}`);
+    }
   };
 
   useEffect(() => {

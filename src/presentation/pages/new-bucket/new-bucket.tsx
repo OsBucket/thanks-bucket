@@ -10,12 +10,19 @@ import { Todo } from '@/domain/models/bucket-model';
 import { BucketTemplate, addBucket } from '@/services/bucket';
 import BucketNameOverlay from '@/presentation/components/BucketNameOverlay';
 import Topics from '@/presentation/components/Topics';
+import { useQuery } from '@tanstack/react-query';
+import { getProfile } from '@/services/user';
 
 interface NewBucketProps {}
 
 const NewBucket: FC<NewBucketProps> = () => {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile
+  });
 
   const [bucketName, setBucketName] = useState<string>('');
   const [dueDate, setDueDate] = useState('2024-12-31');
@@ -84,7 +91,9 @@ const NewBucket: FC<NewBucketProps> = () => {
   };
 
   const goHome = () => {
-    router.push('/');
+    if (profile !== undefined) {
+      router.push(`/${profile.nickname}`);
+    }
   };
 
   useBackPress({
