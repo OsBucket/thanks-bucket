@@ -7,10 +7,9 @@ import { Snackbar } from '@/presentation/components/ui/Snackbar';
 import TodoList from '@/presentation/components/TodoList';
 import useBackPress from '@/presentation/hooks/useBackPress';
 import { Todo } from '@/domain/models/bucket-model';
-import { addBucket } from '@/services/bucket';
+import { BucketTemplate, addBucket } from '@/services/bucket';
 import BucketNameOverlay from '@/presentation/components/BucketNameOverlay';
 import Topics from '@/presentation/components/Topics';
-import { LoadBucketTemplateList } from '@/domain/usecases';
 
 interface NewBucketProps {}
 
@@ -58,7 +57,7 @@ const NewBucket: FC<NewBucketProps> = () => {
     }
   };
 
-  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: BucketTemplate) => {
     if (bucketTemplate !== undefined) {
       const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
       setBucketName(bucketName);

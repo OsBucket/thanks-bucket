@@ -1,31 +1,29 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
-import { makeHome } from '@/main/factories/pages/home-factory';
 import BottomTabLayout from '@/presentation/components/common/bottom-tab-layout';
 import MainLogo from '@/presentation/components/common/main-logo';
-import { Button } from '@/presentation/components/ui/Button';
-import { logout } from '@/services/user';
+import { getProfile } from '@/services/user';
+import { Button } from '@/presentation/components/ui';
+import Home from '@/presentation/pages/home/home';
 
-export default function Home() {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push('/login');
-  };
-
+export default function HomePage() {
   return (
     <BottomTabLayout
       headerLeft={<MainLogo />}
       headerRight={
-        <Button size={'sm'} onClick={handleLogout} className="body1Strong" variant={'outline'}>
+        <Button size={'sm'} className="body1Strong" variant={'outline'}>
           로그아웃
         </Button>
       }
     >
-      {makeHome()}
+      <AuthBucketList />
     </BottomTabLayout>
   );
+}
+
+function AuthBucketList() {
+  const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
+  return profile && <Home nickname={profile.nickname} />;
 }

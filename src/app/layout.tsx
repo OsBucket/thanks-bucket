@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import ReactQueryContext from '@/presentation/context/ReactQueryContext';
 
 import '@/presentation/styles/index.css';
+import { System } from '@/ui/System';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,18 +21,16 @@ export const metadata: Metadata = {
   ]
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
         <link rel="icon" type="image/svg+xml" href="/images/icons/main-icon.svg" />
       </head>
       <body className={inter.className}>
-        <ReactQueryContext>{children}</ReactQueryContext>
+        <System.Root>
+          <System.Provider>{children}</System.Provider>
+        </System.Root>
       </body>
     </html>
   );

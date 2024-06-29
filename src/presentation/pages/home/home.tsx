@@ -10,18 +10,21 @@ import BottomModal from '@/presentation/components/ui/BottomModal';
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
 import { Button } from '@/presentation/components/ui/Button';
 import { deleteBucketById, getBuckets, updateBucketById } from '@/services/bucket';
-import { getProfile } from '@/services/user';
+
 import { Bucket } from '@/domain/models/bucket-model';
 import DetailOverlay from './components/DetailOverlay';
 import BucketList from './components/BucketList';
 import { useDisclosure } from '@/presentation/hooks/use-disclosure';
 import { Loading, ConfirmModal } from '@/presentation/components/ui';
 
-function Home() {
+function Home({ nickname }: { nickname: string }) {
   const queryClient = useQueryClient();
 
-  const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
-  const { data: bucketList, isLoading } = useQuery({ queryKey: ['buckets'], queryFn: getBuckets });
+  const { data, isLoading } = useQuery({
+    queryKey: ['buckets'],
+    queryFn: () => getBuckets({ nickname, page: 0, size: 100 })
+  });
+  const { content: bucketList = [] } = data || {};
 
   const mutation = useMutation({
     mutationFn: deleteBucketById,
@@ -101,7 +104,7 @@ function Home() {
       <main className="relative">
         <div className="py-2 text-center">
           <div className="flex justify-center ">
-            <h1 className="title3">{profile?.nickname ?? ''}</h1>
+            <h1 className="title3">{nickname ?? ''}</h1>
             <Image width={90} height={24} src="/images/icons/home-main.svg" alt="" />
             <Image width={16} height={16} src="/images/icons/home-star.svg" alt="" />
           </div>

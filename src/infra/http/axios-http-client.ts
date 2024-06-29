@@ -8,7 +8,7 @@ export class AxiosHttpClient implements HttpClient {
     let axiosResponse: AxiosResponse<{ timestamp: string; data: any; path: string }>;
     try {
       axiosResponse = await axios.request({
-        url: data.url,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/${data.url}`,
         method: data.method,
         headers: data.headers,
         data: data.body,

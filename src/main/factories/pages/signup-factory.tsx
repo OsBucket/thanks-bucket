@@ -1,5 +1,10 @@
 import Signup from '@/presentation/pages/signup/signup';
+import { Suspense } from 'react';
 
 export const makeSignup = () => {
-  return <Signup />;
+  return (
+    <Suspense>
+      <Signup />
+    </Suspense>
+  );
 };

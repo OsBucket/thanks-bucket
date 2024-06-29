@@ -3,16 +3,17 @@ import { FC, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Portal } from '@/presentation/components/ui';
 import { Divider, SearchInput } from '@/presentation/components/common';
 import BucketTemplates from '@/presentation/components/BucketTemplates';
-import { LoadBucketTemplateList } from '@/domain/usecases';
+
 import MobileHeader from './common/mobile-header';
 import { Back } from './common/vectors';
+import { BucketTemplate } from '@/services/bucket';
 
 interface BucketNameOverlayProps {
   show: boolean;
   title?: string;
   showTemplate?: boolean;
   closeModal: () => void;
-  onSubmit: (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => void;
+  onSubmit: (name: string, bucketTemplate?: BucketTemplate) => void;
 }
 
 const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeModal, title, showTemplate }) => {
@@ -20,7 +21,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectTemplate = useCallback(
-    (bucketTemplate: LoadBucketTemplateList.Model) => {
+    (bucketTemplate: BucketTemplate) => {
       onSubmit(name, bucketTemplate);
     },
     [name, onSubmit]

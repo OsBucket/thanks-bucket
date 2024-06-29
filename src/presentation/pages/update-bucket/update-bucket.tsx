@@ -9,10 +9,9 @@ import Topics from '@/presentation/components/Topics';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 
-import { UpdateBucketValue, getBucketById, updateBucketById } from '@/services/bucket';
+import { BucketTemplate, UpdateBucketValue, getBucketById, updateBucketById } from '@/services/bucket';
 import { Todo } from '@/domain/models/bucket-model';
 import useBackPress from '@/presentation/hooks/useBackPress';
-import { LoadBucketTemplateList } from '@/domain/usecases';
 
 const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const router = useRouter();
@@ -59,7 +58,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
     goHome();
   };
 
-  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: BucketTemplate) => {
     if (bucketTemplate !== undefined) {
       const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
       setBucketName(bucketName);
