@@ -10,5 +10,3 @@ interface PortalProps {
 export const Portal: FC<PortalProps> = ({ children }) => {
   return createPortal(children, document.body);
 };
-
-export default Portal;

@@ -15,7 +15,7 @@ import { Bucket } from '@/domain/models/bucket-model';
 import DetailOverlay from './components/DetailOverlay';
 import BucketList from './components/BucketList';
 import { useDisclosure } from '@/presentation/hooks/use-disclosure';
-import { Loading, ConfirmModal } from '@/presentation/components/ui';
+import { LoadingOverlay, ConfirmModal } from '@/presentation/components/ui';
 
 function Home({ nickname }: { nickname: string }) {
   const queryClient = useQueryClient();
@@ -100,7 +100,7 @@ function Home({ nickname }: { nickname: string }) {
 
   return (
     <div className="px-4">
-      <Loading show={isLoading} />
+      <LoadingOverlay show={isLoading} />
       <main className="relative">
         <div className="py-2 text-center">
           <div className="flex justify-center ">

@@ -4,11 +4,11 @@ import Image from 'next/image';
 import { FC } from 'react';
 import { createPortal } from 'react-dom';
 
-interface LoadingProps {
+interface Props {
   show: boolean;
 }
 
-const Loading: FC<LoadingProps> = ({ show }) => {
+export const LoadingOverlay: FC<Props> = ({ show }) => {
   return (
     show &&
     createPortal(
@@ -26,5 +26,3 @@ const Loading: FC<LoadingProps> = ({ show }) => {
     )
   );
 };
-
-export default Loading;

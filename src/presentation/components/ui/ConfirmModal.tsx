@@ -13,7 +13,7 @@ interface ConfirmModalProps {
   hasCancelBtn?: boolean;
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = ({
+export const ConfirmModal: FC<ConfirmModalProps> = ({
   headerMessage,
   modalMessage,
   closeModal,
@@ -67,5 +67,3 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
     </Portal>
   );
 };
-
-export default ConfirmModal;
