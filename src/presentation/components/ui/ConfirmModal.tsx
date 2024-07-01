@@ -67,3 +67,5 @@ export const ConfirmModal: FC<ConfirmModalProps> = ({
     </Portal>
   );
 };
+
+export default ConfirmModal;
