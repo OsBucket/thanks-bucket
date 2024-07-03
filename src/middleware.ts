@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 import { baseClientEnv } from './libs/core/base/baseEnv';
 import { MemberRole } from './services/user';
 
-const publicPages = ['/', '/auth/login', '/auth/signup', '/on-boarding'];
+const publicPages = ['/', '/auth/login', '/auth/signup', '/welcome'];
 
 const fetchProfile = (accessToken: string) => {
   return fetch(`${baseClientEnv.serverAPIUri}/auth/profile`, {
