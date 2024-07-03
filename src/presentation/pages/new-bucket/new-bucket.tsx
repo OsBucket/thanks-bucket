@@ -1,23 +1,30 @@
+'use client';
+
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { FC, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 import { Snackbar } from '@/presentation/components/ui/Snackbar';
 import TodoList from '@/presentation/components/TodoList';
 import useBackPress from '@/presentation/hooks/useBackPress';
 import { Todo } from '@/domain/models/bucket-model';
-import { addBucket } from '@/services/bucket';
+import { BucketTemplate, addBucket } from '@/services/bucket';
 import BucketNameOverlay from '@/presentation/components/BucketNameOverlay';
 import Topics from '@/presentation/components/Topics';
-import { LoadBucketTemplateList } from '@/domain/usecases';
+import { useQuery } from '@tanstack/react-query';
+import { getProfile } from '@/services/user';
 
 interface NewBucketProps {}
 
 const NewBucket: FC<NewBucketProps> = () => {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  // const { data: profile } = useQuery({
+  //   queryKey: ['profile'],
+  //   queryFn: getProfile
+  // });
 
   const [bucketName, setBucketName] = useState<string>('');
   const [dueDate, setDueDate] = useState('2024-12-31');
@@ -59,7 +66,7 @@ const NewBucket: FC<NewBucketProps> = () => {
     }
   };
 
-  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: BucketTemplate) => {
     if (bucketTemplate !== undefined) {
       const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
       setBucketName(bucketName);
@@ -85,28 +92,25 @@ const NewBucket: FC<NewBucketProps> = () => {
     setShowBucketNameModal(false);
   };
 
-  const goHome = () => {
-    router.push('/');
-  };
+  // const goHome = () => {
+  //   if (profile !== undefined) {
+  //     router.push(`/${profile.nickname}`);
+  //   }
+  // };
 
   useBackPress({
     backPressed: () => {
       if (showBucketNameModal) {
         setShowBucketNameModal(false);
       } else {
-        goHome();
+        // goHome();
       }
     },
     showOverlay: showBucketNameModal
   });
 
   return (
-    <main className="max-w-[450px] px-4">
-      <header className="h-[54px] flex items-center">
-        <Button onClick={goHome} className="p-0" variant={'basic'}>
-          <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
-        </Button>
-      </header>
+    <main>
       <section>
         <h1 className="subTitle1 my-5">2024년에 무엇을 이루고 싶으세요?</h1>
         <Input
@@ -140,11 +144,11 @@ const NewBucket: FC<NewBucketProps> = () => {
         </div>
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
-          <div className="fixed bottom-0 w-full max-w-[450px] left-1/2 -translate-x-1/2">
+          <div className="fixed bottom-0 w-full left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
-              <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
+              {/* <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
                 <span className="subTitle2 ">마이버킷 이동</span>
-              </Button>
+              </Button> */}
               <Button
                 onClick={handleBucketSubmit}
                 disabled={bucketName.trim().length === 0 || !dueDate}
@@ -168,9 +172,9 @@ const NewBucket: FC<NewBucketProps> = () => {
         />
       )}
       <Snackbar show={showSucessSnackbar} closeSnackbar={() => setShowSucessSnackbar(false)}>
-        <Button onClick={goHome} size={'basic'} className="text-purple-300" variant={'basic'}>
+        {/* <Button onClick={goHome} size={'basic'} className="text-purple-300" variant={'basic'}>
           보러가기
-        </Button>
+        </Button> */}
       </Snackbar>
     </main>
   );

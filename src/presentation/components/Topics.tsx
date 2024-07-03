@@ -34,6 +34,7 @@ const Topics: FC<TopicsProps> = ({ selectedCategories, setSelectedCategories }) 
       return [...prev, id];
     });
   };
+
   return (
     <div className={`border mt-6 rounded-lg ${showCategory ? 'border-black ' : ''}`}>
       <div className="flex justify-between items-center py-5 px-4">

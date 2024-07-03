@@ -1,16 +1,15 @@
-import { LoadBucketTemplateList } from '@/domain/usecases';
-import { makeRemoteLoadBucketTemplateList } from '@/main/factories/usecases';
-import { Divider } from '@/presentation/components/ui';
+import { Divider } from '@/presentation/components/common';
+import { BucketTemplate, getBucketTemplates } from '@/services/bucket';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 interface BucketTemplatesProps {
-  onSelect: (bucketTemplate: LoadBucketTemplateList.Model) => void;
+  onSelect: (bucketTemplate: BucketTemplate) => void;
 }
 
 const BucketTemplates = ({ onSelect }: BucketTemplatesProps) => {
   const { data: bucketTemplates } = useSuspenseQuery({
     queryKey: ['bucket-templates'],
-    queryFn: () => makeRemoteLoadBucketTemplateList().load()
+    queryFn: () => getBucketTemplates()
   });
 
   return (

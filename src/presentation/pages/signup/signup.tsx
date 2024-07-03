@@ -1,13 +1,14 @@
-import { loginUser, signupUser } from '@/services/user';
-import { Button } from '@/presentation/components/ui/Button';
+import { signupUser } from '@/services/user';
+import { Input, Button, ConfirmModal } from '@/presentation/components/ui';
 import Checkbox from '@/presentation/components/ui/Checkbox';
-import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
-import { Input } from '@/presentation/components/ui/Input';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import OccupationSelect from './components/OccupationSelect';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { setCookie } from 'cookies-next';
+
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { getOccupations } from '@/services/bucket';
 
 interface IInputLabelProps {
   id: string;
@@ -24,16 +25,16 @@ const InputLabel = ({ id, label }: IInputLabelProps) => {
 
 interface ISignupInput {
   id: string;
-  password: string;
-  passwordConfirm: string;
   nickname: string;
   occupationId: string;
 }
 
 const Signup: FC = () => {
-  const rowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [year, setYear] = useState<string | undefined>(undefined);
+
+  const params = useSearchParams();
+  const accessToken = params.get('access_token');
 
   const {
     register,
@@ -45,6 +46,14 @@ const Signup: FC = () => {
     mode: 'onBlur'
   });
 
+  const { data: occupations } = useQuery({
+    queryKey: ['occupations'],
+    queryFn: () =>
+      getOccupations({
+        headers: { Authorization: accessToken }
+      })
+  });
+
   const [agree, setAgree] = useState<{ [key: string]: boolean }>({
     all: false,
     agreement: false
@@ -52,6 +61,46 @@ const Signup: FC = () => {
   const [idDuplicationErr, setIdDuplicationErr] = useState(false);
 
   watch();
+
+  const onChangeAgree = (id: string, checked: boolean) => {
+    if (id === 'all') {
+      setAgree((prev) => {
+        return { ...prev, all: checked, age: checked, agreement: checked };
+      });
+    } else {
+      setAgree((prev) => {
+        return { ...prev, [id]: checked };
+      });
+    }
+  };
+
+  const onSubmit: SubmitHandler<ISignupInput> = (data) => {
+    signupUser(
+      {
+        memberId: data.id,
+        nickname: data.nickname,
+        occupationId: data.occupationId,
+        birthday: year ? `${year}-01-01` : undefined
+      },
+      { headers: { Authorization: accessToken } }
+    )
+      .then((accessToken) => {
+        console.log({ accessToken });
+        setCookie('jwt', accessToken);
+        router.push(`/${data.nickname}`);
+      })
+      .catch((e) => {
+        if (e.response?.data.message === '이미 존재하는 회원입니다.') {
+          setIdDuplicationErr(true);
+        }
+      });
+  };
+
+  const onError = () => {
+    // console.log('error');
+  };
+
+  const isAgreed = () => agree.agreement;
 
   useEffect(() => {
     const value = year;
@@ -63,53 +112,8 @@ const Signup: FC = () => {
     }
   }, [year]);
 
-  const onChangeAgree = (id: string, checked: boolean) => {
-    if (id === 'all') {
-      setAgree((prev) => {
-        return {
-          ...prev,
-          all: checked,
-          age: checked,
-          agreement: checked
-        };
-      });
-      return;
-    }
-    setAgree((prev) => {
-      return {
-        ...prev,
-        [id]: checked
-      };
-    });
-  };
-
-  const onSubmit: SubmitHandler<ISignupInput> = (data) => {
-    signupUser({
-      memberId: data.id,
-      password: data.password,
-      nickname: data.nickname,
-      occupationId: data.occupationId,
-      birthday: year ? `${year}-01-01` : undefined
-    })
-      .then(() => {
-        return loginUser(data.id, data.password);
-      })
-      .then(() => router.push('/new'))
-      .catch((e) => {
-        if (e.response?.data.message === '이미 존재하는 회원입니다.') {
-          setIdDuplicationErr(true);
-        }
-      });
-  };
-  const onError = () => {
-    // console.log('error');
-  };
-  const isPasswordSame = watch('password') === watch('passwordConfirm');
-
-  const isAgreed = () => agree.agreement;
-
   return (
-    <main className="max-w-[450px] px-4">
+    <main className="px-4">
       <h1 className="title3 py-5"> 시작이 반, 계정 만들기</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div>
@@ -132,47 +136,10 @@ const Signup: FC = () => {
             영어 소문자, 숫자로 최대 10자까지 가능해요.
           </p>
         </div>
-        <div className="mt-8">
-          <InputLabel id="password" label="비밀번호" />
-          <div className="pt-2">
-            <Input
-              {...register('password', {
-                minLength: 8,
-                required: true
-              })}
-              id="password"
-              variant={'gray'}
-              type="password"
-              className="h-12"
-              placeholder="비밀번호"
-            />
-          </div>
-          <div className="py-2">
-            <Input
-              {...register('passwordConfirm', {
-                required: true,
-                minLength: 8
-              })}
-              id="passwordConfirm"
-              variant={'gray'}
-              type="password"
-              className="h-12"
-              placeholder="비밀번호 확인"
-            />
-          </div>
-          {getValues('password') && (
-            <p className={`caption1Strong ${isPasswordSame && !errors.password ? 'text-green-500' : 'text-red-500'}`}>
-              {!isPasswordSame
-                ? '입력하신 두 비밀번호가 달라요'
-                : errors.password
-                ? '비밀번호는 최소 8자 이상 입력해주세요'
-                : '입력한 두 비밀번호가 일치해요.'}
-            </p>
-          )}
-        </div>
+
         <div className="mt-8">
           <InputLabel id="name" label="누구의 버킷 리스트인가요?" />
-          <div ref={rowRef} className="py-2 flex">
+          <div className="py-2 flex">
             <div className="grow">
               <Input
                 {...register('nickname', {
@@ -187,7 +154,7 @@ const Signup: FC = () => {
                 placeholder="닉네임 혹은 이름"
               />
             </div>
-            <Image src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
+            <Image width={90} height={24} src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
           </div>
           <p className={`caption1Strong ${errors.nickname ? 'text-red-500' : 'text-gray-500'}`}>
             한글, 영어, 숫자로 2~8자까지 가능해요.
@@ -213,7 +180,21 @@ const Signup: FC = () => {
         <div className="mt-8">
           <InputLabel id="job" label="직무가 어떻게 되세요? (선택)" />
           <div className="pt-2">
-            <OccupationSelect selectedOccupation={getValues('occupationId')} {...register('occupationId')} />
+            <select
+              {...register('occupationId')}
+              className={`w-full bg-white h-12 rounded-5xl py-[5px] appearance-none px-4 focus:outline-none border-2 border-text-gray-400
+                  ${!getValues('occupationId') ? 'text-gray-400' : ''}
+              `}
+            >
+              <option value="">직무</option>
+              {occupations?.map((occupation) => {
+                return (
+                  <option className="text-black" key={occupation.id} value={occupation.id}>
+                    {occupation.name}
+                  </option>
+                );
+              })}
+            </select>
           </div>
         </div>
 

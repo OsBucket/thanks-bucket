@@ -9,11 +9,10 @@ import Topics from '@/presentation/components/Topics';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 
-import { UpdateBucketValue, getBucketById, updateBucketById } from '@/services/bucket';
+import { BucketTemplate, UpdateBucketValue, getBucketById, updateBucketById } from '@/services/bucket';
 import { Todo } from '@/domain/models/bucket-model';
 import useBackPress from '@/presentation/hooks/useBackPress';
-import Image from 'next/image';
-import { LoadBucketTemplateList } from '@/domain/usecases';
+import { getProfile } from '@/services/user';
 
 const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const router = useRouter();
@@ -21,6 +20,11 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   const { data: bucket } = useQuery({
     queryKey: ['buckets', bucketId],
     queryFn: () => getBucketById(bucketId)
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile
   });
 
   const [bucketName, setBucketName] = useState<string>('');
@@ -60,7 +64,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
     goHome();
   };
 
-  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: LoadBucketTemplateList.Model) => {
+  const handleBucketTempleteSubmit = (name: string, bucketTemplate?: BucketTemplate) => {
     if (bucketTemplate !== undefined) {
       const { bucketName, bucketTodoNames, bucketTemplateTopics } = bucketTemplate;
       setBucketName(bucketName);
@@ -84,7 +88,9 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   };
 
   const goHome = () => {
-    router.push('/');
+    if (profile !== undefined) {
+      router.push(`/${profile.nickname}`);
+    }
   };
 
   useEffect(() => {
@@ -108,13 +114,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
   });
 
   return (
-    <main className="max-w-[450px] px-4">
-      <header className="h-[54px] relative flex justify-center items-center">
-        <Button onClick={goHome} className="absolute left-0 p-0" variant={'basic'}>
-          <Image width={20} height={20} src="/close.svg" alt="close-btn" />
-        </Button>
-        <h1 className="text-center body2Strong">버킷 수정</h1>
-      </header>
+    <main>
       <section>
         <Input
           value={bucketName ?? ''}
@@ -149,7 +149,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
         <div className="mt-2 pb-[200px]">
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
 
-          <div className="fixed bottom-0 w-full max-w-[450px] left-1/2 -translate-x-1/2">
+          <div className="fixed bottom-0 w-full left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
               <Button
                 onClick={handleBucketSubmit}

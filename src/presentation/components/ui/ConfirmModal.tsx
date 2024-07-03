@@ -1,15 +1,7 @@
+'use client';
+
 import { FC } from 'react';
-import { createPortal } from 'react-dom';
-import { Button } from './Button';
-
-interface ModalWrapperProps {
-  children: React.ReactNode;
-}
-
-export const ModalWrapper: FC<ModalWrapperProps> = ({ children }) => {
-  if (window === undefined) return null;
-  return <>{createPortal(children, document.body)}</>;
-};
+import { Portal, Button } from '.';
 
 interface ConfirmModalProps {
   children: React.ReactNode;
@@ -21,7 +13,7 @@ interface ConfirmModalProps {
   hasCancelBtn?: boolean;
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = ({
+export const ConfirmModal: FC<ConfirmModalProps> = ({
   headerMessage,
   modalMessage,
   closeModal,
@@ -36,7 +28,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
     }
   };
   return (
-    <ModalWrapper>
+    <Portal>
       <div
         onClick={backdropClick}
         className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
@@ -72,7 +64,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
           )}
         </div>
       </div>
-    </ModalWrapper>
+    </Portal>
   );
 };
 
