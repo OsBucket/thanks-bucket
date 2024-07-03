@@ -1,6 +1,5 @@
-import dynamic from 'next/dynamic';
+import UpdateBucket from '@/presentation/pages/update-bucket/update-bucket';
 
-const UpdateBucket = dynamic(() => import('@/presentation/pages/update-bucket/update-bucket'), { ssr: false });
 export const makeUpdateBucket = (bucketId: number) => {
   return <UpdateBucket bucketId={bucketId} />;
 };

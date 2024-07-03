@@ -9,9 +9,9 @@ import { UpdateBucketValue } from '@/services/bucket';
 import { UseMutationResult } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/presentation/components/ui/Button';
-import { ModalWrapper } from '@/presentation/components/ui/ConfirmModal';
+import { Button, Portal } from '@/presentation/components/ui';
 import TodoList from '@/presentation/components/TodoList';
+import { Close } from '@/presentation/components/common/vectors';
 
 interface DetailOverlayProps {
   bucket: Bucket;
@@ -101,7 +101,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
   };
 
   return (
-    <ModalWrapper>
+    <Portal>
       <div
         onClick={backdropClick}
         className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
@@ -113,7 +113,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
         >
           <div className="text-end mb-2">
             <Button onClick={closeOverlay} className="p-0 h-0" variant={'basic'}>
-              <Image width={20} height={20} src="/images/icons/close.svg" alt="close-btn" />
+              <Close />
             </Button>
           </div>
           <div className="text-center max-h-[200px] overflow-y-scroll">
@@ -169,7 +169,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
           </div>
         </div>
       </div>
-    </ModalWrapper>
+    </Portal>
   );
 };
 

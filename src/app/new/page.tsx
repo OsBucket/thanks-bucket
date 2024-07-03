@@ -1,7 +1,10 @@
-'use client';
-
-import { makeNewBucket } from '@/main/factories/pages/new-bucket-factory';
+import { FullHeightDialog } from '@/presentation/components/common';
+import NewBucket from '@/presentation/pages/new-bucket/new-bucket';
 
 export default function NewBucketPage() {
-  return makeNewBucket();
+  return (
+    <FullHeightDialog title="버킷 생성">
+      <NewBucket />
+    </FullHeightDialog>
+  );
 }

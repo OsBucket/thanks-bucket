@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { ModalWrapper } from './ConfirmModal';
 import { Bucket } from '@/domain/models/bucket-model';
+import { Portal } from '.';
 
 interface BottomModalProps {
   show: boolean;
@@ -16,7 +16,7 @@ const BottomModal: FC<BottomModalProps> = ({ show, closeModal, children }) => {
     }
   };
   return (
-    <ModalWrapper>
+    <Portal>
       <div
         onClick={backdropClick}
         className={`${
@@ -27,7 +27,7 @@ const BottomModal: FC<BottomModalProps> = ({ show, closeModal, children }) => {
           <div className="mt-3 px-4">{children}</div>
         </div>
       </div>
-    </ModalWrapper>
+    </Portal>
   );
 };
 

@@ -11,11 +11,7 @@ interface BucketListProps {
 
 const BucketList: FC<BucketListProps> = ({ bucketList, toggleComplete, selectBucket, clickMoreBtn }) => {
   return (
-    <ul
-      className={`
-      ${bucketList.length > 4 ? 'min-h-[100vh] pb-[150px]' : ''}
-      `}
-    >
+    <ul className="h-full">
       {bucketList.map((bucket) => (
         <BucketItem
           selectBucket={selectBucket}
