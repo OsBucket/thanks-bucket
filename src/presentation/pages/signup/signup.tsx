@@ -4,6 +4,7 @@ import Checkbox from '@/presentation/components/ui/Checkbox';
 import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { setCookie } from 'cookies-next';
 
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
@@ -83,7 +84,11 @@ const Signup: FC = () => {
       },
       { headers: { Authorization: accessToken } }
     )
-      .then(() => router.push(`/${data.nickname}`))
+      .then((accessToken) => {
+        console.log({ accessToken });
+        setCookie('jwt', accessToken);
+        router.push(`/${data.nickname}`);
+      })
       .catch((e) => {
         if (e.response?.data.message === '이미 존재하는 회원입니다.') {
           setIdDuplicationErr(true);

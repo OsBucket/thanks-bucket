@@ -44,8 +44,11 @@ export type UpdateBucketValue = Bucket & {
   topicIds: number[];
 };
 
-export async function getBuckets(query: GetBucketsQuery): Promise<ResponseWithPagination<Bucket>> {
-  const res = await client.api.get(`/buckets?${queryString.stringify(query)}`);
+export async function getBuckets(
+  query: GetBucketsQuery,
+  config?: AxiosRequestConfig
+): Promise<ResponseWithPagination<Bucket>> {
+  const res = await client.api.get(`/buckets?${queryString.stringify(query)}`, config);
   return res.data;
 }
 

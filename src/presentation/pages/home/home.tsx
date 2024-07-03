@@ -17,12 +17,12 @@ import BucketList from './components/BucketList';
 import { useDisclosure } from '@/presentation/hooks/use-disclosure';
 import { LoadingOverlay, ConfirmModal } from '@/presentation/components/ui';
 
-function Home({ nickname }: { nickname: string }) {
+function Home({ nickname, accessToken }: { nickname: string; accessToken?: string }) {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['buckets'],
-    queryFn: () => getBuckets({ nickname, page: 0, size: 100 })
+    queryFn: () => getBuckets({ nickname, page: 0, size: 100 }, { headers: { Authorization: accessToken } })
   });
   const { content: bucketList = [] } = data || {};
 

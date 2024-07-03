@@ -1,11 +1,9 @@
 import MainLogo from '@/presentation/components/common/main-logo';
 import { Button } from '@/presentation/components/ui';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Welcome() {
-  const router = useRouter();
-
   return (
     <div className="w-screen">
       <div className="flex justify-center relative w-full h-[300px]">
@@ -90,9 +88,11 @@ export default function Welcome() {
         </div>
       </div>
       <div className="fixed bottom-[66px] left-1/2 -translate-x-1/2">
-        <Button className="w-[224px]" onClick={() => router.push('/auth/login')}>
-          <span className="subTitle2">계정 만들고 버킷리스트 작성</span>
-        </Button>
+        <Link href={'/auth/login'}>
+          <Button className="w-[224px]">
+            <span className="subTitle2">계정 만들고 버킷리스트 작성</span>
+          </Button>
+        </Link>
       </div>
     </div>
   );
