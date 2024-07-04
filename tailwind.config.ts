@@ -13,6 +13,13 @@ const config: Config = {
         '4xl': '29px',
         '5xl': '35px'
       },
+      boxShadow: {
+        custom: '0px 0px 12px 0px rgba(0, 0, 0, 0.5)'
+      },
+      backgroundImage: {
+        'custom-gradient':
+          'linear-gradient(to left, rgba(255, 0, 17, 1), rgba(255, 0, 252, 1), rgba(0, 1, 255, 1), rgba(22, 236, 232, 1), rgba(24, 255, 0, 1), rgba(255, 247, 0, 1), rgba(255, 16, 1, 1))'
+      },
       colors: {
         white: '#FFFFFF',
         black: '#000000',
@@ -26,7 +33,8 @@ const config: Config = {
           200: '#EEEEEE'
         },
         red: {
-          500: '#EF2B2A'
+          500: '#EF2B2A',
+          100: '#FDE1DF'
         },
         blue: {
           500: '#067DFD'
