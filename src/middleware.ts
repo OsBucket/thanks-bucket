@@ -29,6 +29,7 @@ export default async function middleware(request: NextRequest) {
       }
     }
   }
+
   const access_token = request.cookies.get('jwt')?.value;
   if (publicPages.includes(request.nextUrl.pathname)) {
     if (typeof access_token === 'string') {
@@ -43,16 +44,7 @@ export default async function middleware(request: NextRequest) {
         return response;
       }
     }
-  } else {
-    if (typeof access_token === 'string') {
-      const res = await fetchProfile(access_token);
-      if (res.ok) {
-        return response;
-      } else {
-        const url = request.nextUrl.clone();
-        return NextResponse.redirect(`${url.origin}/auth/login`);
-      }
-    }
   }
+
   return response;
 }
