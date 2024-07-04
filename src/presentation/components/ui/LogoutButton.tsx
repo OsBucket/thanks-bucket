@@ -8,9 +8,10 @@ function LogoutButton() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await logout();
     deleteCookie('jwt');
+    await sleep1Second();
     router.push('/');
+    await logout();
   };
 
   return (
@@ -18,6 +19,12 @@ function LogoutButton() {
       로그아웃
     </Button>
   );
+}
+
+function sleep1Second() {
+  return new Promise((res) => {
+    setTimeout(res, 1000);
+  });
 }
 
 export default LogoutButton;
