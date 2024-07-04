@@ -1,3 +1,4 @@
+import { Profile } from '@/libs/core/base';
 import { client } from '@/libs/core/common';
 import { AxiosRequestConfig } from 'axios';
 
@@ -6,18 +7,6 @@ type SignupPayload = {
   nickname: string;
   birthday?: string;
   occupationId?: string;
-};
-
-export enum MemberRole {
-  ROLE_USER = 'ROLE_USER',
-  ROLE_GUEST = 'ROLE_GUEST'
-}
-
-type Profile = {
-  id: number;
-  email: string;
-  nickname: string;
-  memberRoles: MemberRole[];
 };
 
 export const getProfile = async (config?: AxiosRequestConfig): Promise<Profile> => {

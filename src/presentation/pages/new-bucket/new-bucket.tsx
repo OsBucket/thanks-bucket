@@ -12,19 +12,14 @@ import { Todo } from '@/domain/models/bucket-model';
 import { BucketTemplate, addBucket } from '@/services/bucket';
 import BucketNameOverlay from '@/presentation/components/BucketNameOverlay';
 import Topics from '@/presentation/components/Topics';
-import { useQuery } from '@tanstack/react-query';
-import { getProfile } from '@/services/user';
+import { getMe } from '@/libs/core/common';
 
 interface NewBucketProps {}
 
 const NewBucket: FC<NewBucketProps> = () => {
+  const me = getMe();
   const dateInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
-  // const { data: profile } = useQuery({
-  //   queryKey: ['profile'],
-  //   queryFn: getProfile
-  // });
 
   const [bucketName, setBucketName] = useState<string>('');
   const [dueDate, setDueDate] = useState('2024-12-31');
@@ -92,18 +87,18 @@ const NewBucket: FC<NewBucketProps> = () => {
     setShowBucketNameModal(false);
   };
 
-  // const goHome = () => {
-  //   if (profile !== undefined) {
-  //     router.push(`/${profile.nickname}`);
-  //   }
-  // };
+  const goHome = () => {
+    if (me !== undefined) {
+      router.push(`/${me.NICKNAME}`);
+    }
+  };
 
   useBackPress({
     backPressed: () => {
       if (showBucketNameModal) {
         setShowBucketNameModal(false);
       } else {
-        // goHome();
+        goHome();
       }
     },
     showOverlay: showBucketNameModal
@@ -146,9 +141,9 @@ const NewBucket: FC<NewBucketProps> = () => {
           <TodoList todoList={todoList} setTodoList={setTodoList} newTodo={newTodo} setNewTodo={setNewTodo} />
           <div className="fixed bottom-0 w-full left-1/2 -translate-x-1/2">
             <div className="p-3 flex gap-[10px]">
-              {/* <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
+              <Button onClick={goHome} className="min-w-[130px]" variant={'outline'}>
                 <span className="subTitle2 ">마이버킷 이동</span>
-              </Button> */}
+              </Button>
               <Button
                 onClick={handleBucketSubmit}
                 disabled={bucketName.trim().length === 0 || !dueDate}
@@ -172,9 +167,9 @@ const NewBucket: FC<NewBucketProps> = () => {
         />
       )}
       <Snackbar show={showSucessSnackbar} closeSnackbar={() => setShowSucessSnackbar(false)}>
-        {/* <Button onClick={goHome} size={'basic'} className="text-purple-300" variant={'basic'}>
+        <Button onClick={goHome} size={'basic'} className="text-purple-300" variant={'basic'}>
           보러가기
-        </Button> */}
+        </Button>
       </Snackbar>
     </main>
   );

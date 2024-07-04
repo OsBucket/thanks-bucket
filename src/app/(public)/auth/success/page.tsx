@@ -1,4 +1,5 @@
-import { MemberRole, getProfile } from '@/services/user';
+import { MemberRole } from '@/libs/core/base';
+import { getProfile } from '@/services/user';
 import { notFound, redirect } from 'next/navigation';
 
 interface Props {
