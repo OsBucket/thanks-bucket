@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-import { baseClientEnv } from './libs/core/base/baseEnv';
-import { MemberRole } from './services/user';
+import { baseClientEnv, MemberRole } from './libs/core/base';
 
 const publicPages = ['/', '/auth/login', '/auth/signup', '/welcome'];
 

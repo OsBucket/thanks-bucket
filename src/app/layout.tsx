@@ -28,9 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="icon" type="image/svg+xml" href="/images/icons/main-icon.svg" />
       </head>
       <body className={inter.className}>
-        <System.Root>
-          <System.Provider>{children}</System.Provider>
-        </System.Root>
+        <System.Provider>{children}</System.Provider>
       </body>
     </html>
   );
