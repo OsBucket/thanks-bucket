@@ -4,7 +4,7 @@ import { getCookie } from 'cookies-next';
 
 class Client {
   api: AxiosInstance;
-  uri = baseClientEnv.serverAPIUri;
+  uri = '/api';
 
   constructor() {
     this.api = axios.create({
