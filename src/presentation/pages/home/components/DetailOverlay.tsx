@@ -155,7 +155,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
           <div className="mt-4 mb-3">
             <Button
               onClick={() => {
-                router.push(`/update/${bucket.id}`);
+                router.push(`/buckets/update/${bucket.id}`);
               }}
               size={'sm'}
               variant={'outline'}

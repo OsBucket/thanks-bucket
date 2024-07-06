@@ -84,10 +84,9 @@ const Signup: FC = () => {
       },
       { headers: { Authorization: accessToken } }
     )
-      .then((accessToken) => {
-        console.log({ accessToken });
-        setCookie('jwt', accessToken);
-        router.push(`/${data.nickname}`);
+      .then((responseAccessToekn) => {
+        setCookie('jwt', responseAccessToekn);
+        router.push(`/buckets/${data.nickname}`);
       })
       .catch((e) => {
         if (e.response?.data.message === '이미 존재하는 회원입니다.') {

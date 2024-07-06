@@ -89,7 +89,7 @@ const NewBucket: FC<NewBucketProps> = () => {
 
   const goHome = () => {
     if (me !== undefined) {
-      router.push(`/${me.NICKNAME}`);
+      router.push(`/buckets/${me.NICKNAME}`);
     }
   };
 

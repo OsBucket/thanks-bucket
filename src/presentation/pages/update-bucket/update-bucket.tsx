@@ -89,7 +89,7 @@ const UpdateBucket = ({ bucketId }: { bucketId: number }) => {
 
   const goHome = () => {
     if (profile !== undefined) {
-      router.push(`/${profile.nickname}`);
+      router.push(`/buckets/${profile.nickname}`);
     }
   };
 

@@ -21,7 +21,7 @@ export default function UpdateBucketPage({ params }: Props) {
 
   const handleGoBack = () => {
     if (profile !== undefined) {
-      router.push(`/${profile.nickname}`);
+      router.push(`/buckets/${profile.nickname}`);
     }
   };
 
