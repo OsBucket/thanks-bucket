@@ -2,14 +2,13 @@
 import { deleteCookie } from 'cookies-next';
 import { logout } from '@/services/user';
 import { Button } from './Button';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 function LogoutButton() {
-  const handleLogout = async () => {
+  const handleLogout = () => {
     logout();
     deleteCookie('jwt');
-    await sleep(500);
+    window.location.href = '/';
   };
 
   return (
