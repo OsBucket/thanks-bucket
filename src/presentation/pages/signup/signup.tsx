@@ -85,6 +85,7 @@ const Signup: FC = () => {
       { headers: { Authorization: accessToken } }
     )
       .then((responseAccessToekn) => {
+        console.log(responseAccessToekn);
         setCookie('jwt', responseAccessToekn);
         router.push(`/buckets/${data.nickname}`);
       })
