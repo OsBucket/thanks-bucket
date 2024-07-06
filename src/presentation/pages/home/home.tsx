@@ -138,7 +138,7 @@ function Home({ nickname, accessToken }: { nickname: string; accessToken?: strin
           )}
         </section>
         <div className="fixed bottom-[66px] left-1/2 -translate-x-1/2">
-          <Button onClick={() => router.push('/new')}>
+          <Button onClick={() => router.push('/buckets/new')}>
             <Image width={16} height={16} src="/images/icons/write.svg" alt="write" />
             <span className="ml-1 subTitle2">버킷 만들기</span>
           </Button>
@@ -187,7 +187,7 @@ function Home({ nickname, accessToken }: { nickname: string; accessToken?: strin
         >
           <ul className="body2Strong mb-12">
             <li
-              onClick={() => router.push(`/update/${selectedMoreBtn?.id}`)}
+              onClick={() => router.push(`/buckets/update/${selectedMoreBtn?.id}`)}
               className="flex items-center h-14 cursor-pointer"
             >
               버킷 수정

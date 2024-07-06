@@ -1,4 +1,4 @@
-import { Profile } from '@/libs/core/base';
+import { baseClientEnv, Profile } from '@/libs/core/base';
 import { client } from '@/libs/core/common';
 import { AxiosRequestConfig } from 'axios';
 
@@ -24,4 +24,10 @@ export async function profileUser() {
 
 export async function logout() {
   return client.api.get('/auth/logout');
+}
+
+export function fetchProfile(accessToken: string) {
+  return fetch(`${baseClientEnv.serverAPIUri}/auth/profile`, {
+    headers: { Authorization: accessToken }
+  });
 }

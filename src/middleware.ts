@@ -1,50 +1,78 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { baseClientEnv, MemberRole } from './libs/core/base';
-
-const publicPages = ['/', '/auth/login', '/auth/signup', '/welcome'];
-
-const fetchProfile = (accessToken: string) => {
-  return fetch(`${baseClientEnv.serverAPIUri}/auth/profile`, {
-    headers: { Authorization: accessToken }
-  });
-};
+import { MemberRole } from './libs/core/base';
+import { fetchProfile } from './services/user';
 
 export default async function middleware(request: NextRequest) {
-  let response = NextResponse.next();
-
   if (request.nextUrl.pathname === '/auth/success') {
-    const access_token = request.nextUrl.searchParams.get('access_token');
-
-    if (typeof access_token === 'string') {
-      const res = await fetchProfile(access_token);
-      if (res.ok) {
-        const { data } = await res.json();
-        if (data.memberRoles.includes(MemberRole.ROLE_USER)) {
-          response.cookies.set('jwt', access_token);
-        }
-      } else {
-        const url = request.nextUrl.clone();
-        return NextResponse.redirect(`${url.origin}/auth/login`);
-      }
-    }
+    return AuthSuccessReponse(request);
   }
-
-  const access_token = request.cookies.get('jwt')?.value;
   if (publicPages.includes(request.nextUrl.pathname)) {
-    if (typeof access_token === 'string') {
-      const res = await fetchProfile(access_token);
-      if (res.ok) {
-        const { data } = await res.json();
-        const url = request.nextUrl.clone();
-        url.pathname = data.nickname;
-        return NextResponse.redirect(url.href);
-      } else {
-        response.cookies.delete('jwt');
-        return response;
-      }
-    }
+    return PublicPageReponse(request);
+  }
+  if (request.nextUrl.pathname.includes('/buckets')) {
+    return PrivatePageResponse(request);
   }
 
-  return response;
+  return NextResponse.next();
+}
+
+async function AuthSuccessReponse(request: NextRequest) {
+  const access_token = request.nextUrl.searchParams.get('access_token');
+  const url = request.nextUrl.clone();
+
+  if (typeof access_token === 'string') {
+    const fetchedResponse = await fetchProfile(access_token);
+    if (fetchedResponse.ok) {
+      const { data } = await fetchedResponse.json();
+      if (data.memberRoles.includes(MemberRole.ROLE_USER)) {
+        const response = NextResponse.redirect(`${url.origin}/buckets/${data.nickname}`);
+        response.cookies.set('jwt', access_token);
+        return response;
+      } else if (data.memberRoles.includes(MemberRole.ROLE_GUEST)) {
+        return NextResponse.redirect(`${url.origin}/auth/signup?access_token=${access_token}`);
+      }
+    } else {
+      return NextResponse.redirect(`${url.origin}/auth/login`);
+    }
+  }
+}
+
+const publicPages = ['/', '/auth/login', '/auth/signup', '/welcome'];
+async function PublicPageReponse(request: NextRequest) {
+  const access_token = request.cookies.get('jwt')?.value;
+  const url = request.nextUrl.clone();
+
+  if (access_token !== undefined) {
+    const res = await fetchProfile(access_token);
+    if (res.ok) {
+      const { data } = await res.json();
+      url.pathname = `buckets/${data.nickname}`;
+      return NextResponse.redirect(url.href);
+    } else {
+      const response = NextResponse.next();
+      response.cookies.delete('jwt');
+      return response;
+    }
+  } else {
+    return NextResponse.next();
+  }
+}
+
+async function PrivatePageResponse(request: NextRequest) {
+  const access_token = request.cookies.get('jwt')?.value;
+  const url = request.nextUrl.clone();
+
+  if (access_token === undefined) {
+    return NextResponse.redirect(`${url.origin}/auth/login`);
+  } else {
+    const res = await fetchProfile(access_token);
+    if (res.ok) {
+      return NextResponse.next();
+    } else {
+      const response = NextResponse.redirect(`${url.origin}/auth/login`);
+      response.cookies.delete('jwt');
+      return response;
+    }
+  }
 }
