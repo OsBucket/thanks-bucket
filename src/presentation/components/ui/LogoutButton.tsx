@@ -8,10 +8,10 @@ function LogoutButton() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    deleteCookie('jwt');
-    await sleep1Second();
-    router.push('/');
     await logout();
+    deleteCookie('jwt');
+    await sleep(500);
+    router.push('/');
   };
 
   return (
@@ -21,9 +21,9 @@ function LogoutButton() {
   );
 }
 
-function sleep1Second() {
+function sleep(second: number) {
   return new Promise((res) => {
-    setTimeout(res, 1000);
+    setTimeout(res, second);
   });
 }
 
