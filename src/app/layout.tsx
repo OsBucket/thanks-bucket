@@ -3,8 +3,15 @@ import { Inter } from 'next/font/google';
 
 import '@/presentation/styles/index.css';
 import { System } from '@/ui/System';
+import KakaoScript from '@/libs/core/scripts/kakao';
 
 const inter = Inter({ subsets: ['latin'] });
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 export const metadata: Metadata = {
   title: 'Thanks Bucket',
@@ -30,6 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={inter.className}>
         <System.Provider>{children}</System.Provider>
       </body>
+      <KakaoScript />
     </html>
   );
 }

@@ -1,7 +1,19 @@
 import { FullHeightPage } from '@/presentation/components/common';
+import { Button } from '@/presentation/components/ui';
 import Image from 'next/image';
+import Link from 'next/link';
+import InvitationButton from './comonents/InivitationButton';
+import InvitationModal from './comonents/InvitationModal';
+import { useState } from 'react';
+import InvitationFooter from './comonents/InvitationFooter';
 
-function InvitationDetailPage() {
+interface Props {
+  params: {
+    invitationId: number;
+  };
+}
+
+function InvitationDetailPage({ params }: Props) {
   return (
     <FullHeightPage className="flex justify-center gap-[20px] bg-custom-gradient">
       <Image
@@ -28,6 +40,8 @@ function InvitationDetailPage() {
         src={'/images/invitation/invitation1.banner2.jpeg'}
         alt={'banner1'}
       />
+
+      <InvitationFooter />
     </FullHeightPage>
   );
 }
