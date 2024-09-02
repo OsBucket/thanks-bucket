@@ -1,5 +1,5 @@
 import { signupUser } from '@/services/user';
-import { Input, Button, ConfirmModal } from '@/presentation/components/ui';
+import { Button, ConfirmModal, Input } from '@/presentation/components/ui';
 import Checkbox from '@/presentation/components/ui/Checkbox';
 import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -24,9 +24,10 @@ const InputLabel = ({ id, label }: IInputLabelProps) => {
 };
 
 interface ISignupInput {
-  id: string;
   nickname: string;
-  occupationId: string;
+  birthday?: string;
+  occupationId?: string;
+  discoveryPath?: string;
 }
 
 const Signup: FC = () => {
@@ -77,10 +78,10 @@ const Signup: FC = () => {
   const onSubmit: SubmitHandler<ISignupInput> = (data) => {
     signupUser(
       {
-        memberId: data.id,
         nickname: data.nickname,
         occupationId: data.occupationId,
-        birthday: year ? `${year}-01-01` : undefined
+        birthday: year ? `${year}-01-01` : undefined,
+        discoveryPath: data.discoveryPath
       },
       { headers: { Authorization: accessToken } }
     )
@@ -116,29 +117,8 @@ const Signup: FC = () => {
     <main className="px-4">
       <h1 className="title3 py-5"> 시작이 반, 계정 만들기</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
-        <div>
-          <InputLabel id="id" label="아이디" />
-          <div className="py-2">
-            <Input
-              {...register('id', {
-                required: true,
-                pattern: /^[a-z0-9]{2,10}$/i
-              })}
-              maxLength={10}
-              id="id"
-              variant={'gray'}
-              type="text"
-              className="h-12"
-              placeholder="아이디"
-            />
-          </div>
-          <p className={`caption1Strong ${errors.id ? 'text-red-500' : 'text-gray-500'}`}>
-            영어 소문자, 숫자로 최대 10자까지 가능해요.
-          </p>
-        </div>
-
         <div className="mt-8">
-          <InputLabel id="name" label="누구의 버킷 리스트인가요?" />
+          <InputLabel id="nickname" label="누구의 버킷 리스트인가요?" />
           <div className="py-2 flex">
             <div className="grow">
               <Input
@@ -146,7 +126,7 @@ const Signup: FC = () => {
                   required: true,
                   pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,8}$/i
                 })}
-                id="name"
+                id="nickname"
                 maxLength={8}
                 variant={'gray'}
                 type="text"
@@ -195,6 +175,24 @@ const Signup: FC = () => {
                 );
               })}
             </select>
+          </div>
+        </div>
+        <div className="mt-8">
+          <div className={`flex items-center`}>
+            <Image width={90} height={24} src="/images/icons/main-icon-gray.svg" className="mr-2"
+                   alt="0'sBucket"/>
+            <InputLabel id="discovery-path" label=" 을 어떻게 알게되셨나요? (선택)" />
+          </div>
+          <div className="pt-2 flex">
+            <Input
+              {...register('discoveryPath')}
+              id="discovery-path"
+              maxLength={150}
+              variant={'gray'}
+              type="text"
+              className="h-12"
+              placeholder="친구 추천, 검색 등"
+            />
           </div>
         </div>
 

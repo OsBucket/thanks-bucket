@@ -13,7 +13,7 @@ export type BaseClientEnv = BaseEnv & {
 const side = typeof window === 'undefined' ? 'server' : 'client';
 const environment = (process.env.NEXT_PUBLIC_ENV ?? 'debug') as BaseEnv['environment'];
 const renderMode = (process.env.RENDER_ENV ?? 'ssr') as BaseClientEnv['renderMode'];
-const serverAPIUri = `${process.env.NEXT_PUBLIC_API_URL}/api`;
+const serverAPIUri = `${process.env.NEXT_PUBLIC_API_URL}`;
 
 export const baseEnv: BaseEnv = {
   environment

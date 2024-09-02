@@ -3,10 +3,10 @@ import { client } from '@/libs/core/common';
 import { AxiosRequestConfig } from 'axios';
 
 type SignupPayload = {
-  memberId: string;
   nickname: string;
   birthday?: string;
   occupationId?: string;
+  discoveryPath?: string;
 };
 
 export const getProfile = async (config?: AxiosRequestConfig): Promise<Profile> => {
