@@ -25,12 +25,12 @@ export type UpdateTodo = {
   todoStatus: ProcessStatus;
 };
 
-type ChangeBucketStatusValue = {
+export type ChangeBucketStatusValue = {
   status: ProcessStatus;
   bucketId: number;
 };
 
-type ChangeTodoStatusValue = {
+export type ChangeTodoStatusValue = {
   status: ProcessStatus;
   bucketId: number;
   bucketTodoId: number;

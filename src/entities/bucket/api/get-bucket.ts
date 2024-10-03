@@ -33,9 +33,9 @@ export const getBucketByIdQuery = (id: number) => {
   });
 };
 
-export const getBucketsByNicknameQuery = (nickname: string, accessToken: string) => {
+export const getBucketsByNicknameQuery = (nickname: string) => {
   return useQuery({
     queryKey: ['buckets'],
-    queryFn: () => getBucketsBy({ nickname, page: 0, size: 100 }, { headers: { Authorization: accessToken } })
+    queryFn: () => getBucketsBy({ nickname, page: 0, size: 100 })
   });
 };

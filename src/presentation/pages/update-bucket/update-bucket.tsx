@@ -10,7 +10,6 @@ import { Button } from '@/shared/ui/Button';
 import { LegacyInput } from '@/shared/ui/LegacyInput';
 
 import { BucketTemplate } from '@/services/bucket';
-import useBackPress from '@/shared/lib/hooks/useBackPress';
 import { Topic } from '@/entities/topic/model/Topic';
 import { updateBucketById, UpdateBucketValue, UpdateTodo } from '@/features/change-bucket/api/change-bucket';
 import { Snackbar } from '@/shared/ui/Snackbar';

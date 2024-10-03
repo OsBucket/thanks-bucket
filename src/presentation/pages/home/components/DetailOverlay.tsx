@@ -3,9 +3,6 @@
 import Image from 'next/image';
 import { FC, useState } from 'react';
 
-import { Bucket, Todo } from '@/entities/bucket/Bucket';
-import usePreventScroll from '@/shared/lib/hooks/usePreventScroll';
-import { ChangeBucketStatusValue, ChangeTodoStatusValue } from '@/services/bucket';
 import { UseMutationResult } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
@@ -13,6 +10,8 @@ import { Portal } from '@/presentation/components/ui';
 import TodoList from '@/presentation/components/TodoList';
 import { Close } from '@/shared/ui';
 import { Button } from '@/shared/ui/Button';
+import { Bucket, Todo } from '@/entities/bucket';
+import { ChangeBucketStatusValue, ChangeTodoStatusValue } from '@/features/change-bucket/api/change-bucket';
 
 interface DetailOverlayProps {
   bucket: Bucket;
@@ -22,11 +21,11 @@ interface DetailOverlayProps {
 }
 
 const DetailOverlay: FC<DetailOverlayProps> = ({
-                                                 bucket,
-                                                 closeOverlay,
-                                                 changeBucketStatusMutation,
-                                                 changeTodoStatusMutation
-                                               }) => {
+  bucket,
+  closeOverlay,
+  changeBucketStatusMutation,
+  changeTodoStatusMutation
+}) => {
   const router = useRouter();
   const [todoList, setTodoList] = useState<Todo[]>(bucket.bucketTodos ?? []);
   const [showClapping, setShowClapping] = useState<boolean>(false);
@@ -108,20 +107,16 @@ const DetailOverlay: FC<DetailOverlayProps> = ({
     <Portal>
       <div
         onClick={backdropClick}
-        className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
+        className="fixed left-0 right-0 top-0 z-50 h-[calc(100%)] max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-40 md:inset-0"
       >
-        <div
-          className="z-50 absolute top-1/2 -translate-y-1/2 left-1/2
-       -translate-x-1/2 rounded-3xl bg-white p-5 min-w-[300px]
-       border-2 border-black"
-        >
-          <div className="text-end mb-2">
-            <Button onClick={closeOverlay} className="p-0 h-0" variant={'basic'}>
+        <div className="absolute left-1/2 top-1/2 z-50 min-w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border-2 border-black bg-white p-5">
+          <div className="mb-2 text-end">
+            <Button onClick={closeOverlay} className="h-0 p-0" variant={'basic'}>
               <Close />
             </Button>
           </div>
-          <div className="text-center max-h-[200px] overflow-y-scroll">
-            <p className="body2Strong text-gray-500 mb-1">{`${
+          <div className="max-h-[200px] overflow-y-scroll text-center">
+            <p className="body2Strong mb-1 text-gray-500">{`${
               bucket.goalDate ? bucket.goalDate.replace(/-/gi, '.') : ''
             }까지`}</p>
             <p className="title3">{bucket.title}</p>
@@ -129,20 +124,20 @@ const DetailOverlay: FC<DetailOverlayProps> = ({
           <div className="mt-4">
             <p className="caption1Strong">{getTodoComments()}</p>
 
-            <div className="mt-2 mb-6 w-full bg-gray-200 rounded-full h-2.5">
-              <div className="bg-black h-2.5 rounded-full" style={{ width: `${getCompletedTodoPercent()}%` }}></div>
+            <div className="mb-6 mt-2 h-2.5 w-full rounded-full bg-gray-200">
+              <div className="h-2.5 rounded-full bg-black" style={{ width: `${getCompletedTodoPercent()}%` }}></div>
             </div>
           </div>
           <div>
-            <p className="mb-2 body1Strong">
+            <p className="body1Strong mb-2">
               TO DO LIST <span>{todoList.length}</span>
             </p>
             {todoList.length > 0 ? (
               <TodoList todoList={todoList} setTodoList={setTodoList} toggleEnabled={true} inputEnabled={false} />
             ) : (
-              <div className="py-5 flex flex-col justify-center items-center mt-2 h-[112px]">
+              <div className="mt-2 flex h-[112px] flex-col items-center justify-center py-5">
                 <Image width={40} height={40} src="/check-list.svg" alt="check-list" />
-                <p className="mt-2 caption1Strong text-gray-500">상세 할 일을 정하지 않았어요</p>
+                <p className="caption1Strong mt-2 text-gray-500">상세 할 일을 정하지 않았어요</p>
               </div>
             )}
           </div>
@@ -151,19 +146,19 @@ const DetailOverlay: FC<DetailOverlayProps> = ({
               width={300}
               height={524}
               unoptimized
-              className="z-50 fixed left-[0%] bottom-28 h-full w-full"
+              className="fixed bottom-28 left-[0%] z-50 h-full w-full"
               src="/images/clapping.gif"
               alt="clapping"
             />
           ) : null}
-          <div className="mt-4 mb-3">
+          <div className="mb-3 mt-4">
             <Button
               onClick={() => {
                 router.push(`/buckets/update/${bucket.id}`);
               }}
               size={'sm'}
               variant={'outline'}
-              className="w-full mb-2"
+              className="mb-2 w-full"
             >
               <span className="body1Strong">버킷 수정</span>
             </Button>

@@ -37,7 +37,7 @@ const Signup: FC = () => {
   const [year, setYear] = useState<string | undefined>(undefined);
 
   const params = useSearchParams();
-  const accessToken = params.get('access_token');
+  const accessToken = params?.get('access_token');
 
   const {
     register,

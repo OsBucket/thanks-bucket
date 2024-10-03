@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import CheckboxLegacy from '@/presentation/components/ui/CheckboxLegacy';
-import { Todo } from '@/domain/models';
 import { LegacyInput } from '@/shared/ui/LegacyInput';
+import { Todo } from '@/entities/bucket';
 
 interface TodoItemProps {
   todo: Todo;

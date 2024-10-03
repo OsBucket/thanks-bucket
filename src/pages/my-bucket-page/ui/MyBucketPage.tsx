@@ -10,7 +10,7 @@ import BottomModal from '@/presentation/components/ui/BottomModal';
 import { Button } from '@/shared/ui/Button';
 import { useDisclosure } from '@/shared/lib/hooks/useDisclosure';
 import { ConfirmModal } from '@/presentation/components/ui';
-import { deleteBucketById, updateBucketById } from '@/features/change-bucket/api/change-bucket';
+import { deleteBucketById } from '@/features/change-bucket/api/change-bucket';
 import { Bucket } from '@/entities/bucket';
 import { Divider } from '@/shared/ui/Divider';
 import { MyBucketProfile } from './MyBucketProfile';
@@ -20,10 +20,10 @@ import BucketList from '@/presentation/pages/home/components/BucketList';
 import { getBucketsByNicknameQuery } from '@/entities/bucket/api/get-bucket';
 import { Snackbar } from '@/shared/ui/Snackbar';
 
-function MyBucketPage({ nickname, accessToken }: { nickname: string; accessToken: string }) {
+function MyBucketPage({ nickname }: { nickname: string }) {
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = getBucketsByNicknameQuery(nickname, accessToken);
+  const { data, isLoading } = getBucketsByNicknameQuery(nickname);
   const bucketList = data?.content;
 
   const deleteMutation = useMutation({
