@@ -80,16 +80,16 @@ const NewBucket: FC<NewBucketProps> = () => {
     }
   };
 
-  useBackPress({
-    backPressed: () => {
-      if (showBucketNameModal) {
-        setShowBucketNameModal(false);
-      } else {
-        goHome();
-      }
-    },
-    showOverlay: showBucketNameModal
-  });
+  // useBackPress({
+  //   backPressed: () => {
+  //     if (showBucketNameModal) {
+  //       setShowBucketNameModal(false);
+  //     } else {
+  //       goHome();
+  //     }
+  //   },
+  //   showOverlay: showBucketNameModal
+  // });
 
   return (
     <main>
