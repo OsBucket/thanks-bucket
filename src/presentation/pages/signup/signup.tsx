@@ -126,7 +126,7 @@ const Signup: FC = () => {
               <LegacyInput
                 {...register('nickname', {
                   required: true,
-                  pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,8}$/i
+                  pattern: /^[a-zA-Z0-9]{2,8}$/i
                 })}
                 id="nickname"
                 maxLength={8}
@@ -139,7 +139,7 @@ const Signup: FC = () => {
             <Image width={90} height={24} src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
           </div>
           <p className={`caption1Strong ${errors.nickname ? 'text-red-500' : 'text-gray-500'}`}>
-            한글, 영어, 숫자로 2~8자까지 가능해요.
+            영어, 숫자로 2~8자까지 가능해요.
           </p>
         </div>
         <div className="mt-8">
