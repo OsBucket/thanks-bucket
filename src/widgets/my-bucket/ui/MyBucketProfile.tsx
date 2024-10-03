@@ -9,7 +9,7 @@ interface MyBucketProfileProps {
 export const MyBucketProfile: FC<MyBucketProfileProps> = ({ nickname }) => {
   const shareKakao = (nickName: string) => {
     window.Kakao.Share.sendCustom({
-      templateId: 112816,
+      templateId: process.env.KAKAO_SHARE_MY_BUCKET_TEMPLATE_ID,
       templateArgs: {
         NICK_NAME: nickName
       }
