@@ -1,7 +1,5 @@
 import { Fragment } from 'react';
 
-function AuthSuccessPage() {
+export default function AuthSuccessPage() {
   return <Fragment />;
 }
-
-export default AuthSuccessPage;

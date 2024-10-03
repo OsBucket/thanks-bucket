@@ -1,18 +1,20 @@
 'use client';
 
-import { forwardRef, useRef, useMemo, useEffect } from 'react';
+import { forwardRef, useEffect, useMemo, useRef } from 'react';
 import debounce from 'lodash/debounce';
 
-import { KeyType, mergeRefs } from '@/presentation/utils';
-import { useInput } from '@/presentation/hooks/use-input';
-import { Input, InputProps } from '@/presentation/components/ui/Input';
+
+import { useInput } from '@/shared/lib/hooks/useInput';
+import { LegacyInput, LegacyInputProps } from '@/shared/ui/LegacyInput';
+import { KeyType } from '@/shared/consts';
+import { mergeRefs } from '@/presentation/utils/refs';
 
 type SearchInputOptions = {
   onSearch?: (value: string) => void;
   defaultValue?: string;
   searchAsYouType?: boolean;
 };
-export type SearchInputProps = SearchInputOptions & Omit<InputProps, 'defaultValue' | 'value' | 'onChange'>;
+export type SearchInputProps = SearchInputOptions & Omit<LegacyInputProps, 'defaultValue' | 'value' | 'onChange'>;
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>((props, ref) => {
   const { defaultValue, variant = 'underline', onSearch, searchAsYouType, ...rest } = props;
@@ -44,7 +46,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>((props, ref) 
   }, [debouncedSearch, searchAsYouType, value]);
 
   return (
-    <Input
+    <LegacyInput
       clearBtn
       value={value}
       variant={variant}

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Bucket } from '@/domain/models/bucket-model';
+import { Bucket } from '@/entities/bucket/Bucket';
 import { Portal } from '.';
 
 interface BottomModalProps {

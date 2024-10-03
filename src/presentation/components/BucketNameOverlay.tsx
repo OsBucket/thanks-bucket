@@ -1,12 +1,13 @@
 import { FC, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { Button, Portal } from '@/presentation/components/ui';
-import { Divider, SearchInput } from '@/presentation/components/common';
-import BucketTemplates from '@/presentation/components/BucketTemplates';
-
-import MobileHeader from './common/mobile-header';
-import { Back } from './common/vectors';
+import { Portal } from '@/presentation/components/ui';
+import { SearchInput } from '@/presentation/components/common';
 import { BucketTemplate } from '@/services/bucket';
+import { Divider } from '@/shared/ui/Divider';
+import BucketTemplates from '@/entities/buckettemplate/ui/BucketTemplates';
+import { Button } from '@/shared/ui/Button';
+import MobileHeader from '@/widgets/full-height-page/ui/mobile-header';
+import Image from 'next/image';
 
 interface BucketNameOverlayProps {
   show: boolean;
@@ -42,16 +43,20 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
     <Portal>
       <div
         className={`${
-          show ? 'fixed top-0 left-1/2 -translate-x-1/2 z-50 w-screen h-screen opacity-100' : 'w-0 h-0 opacity-0'
+          show ? 'fixed left-1/2 top-0 z-50 h-screen w-screen -translate-x-1/2 opacity-100' : 'h-0 w-0 opacity-0'
         } bg-white duration-200`}
       >
         <MobileHeader
-          headerLeft={<Back onClick={closeModal} />}
+          headerLeft={
+            <Button size={'basic'} variant={'basic'} onClick={closeModal}>
+              <Image width={20} height={20} src={'/images/icons/back-icon.svg'} alt={'back'} />
+            </Button>
+          }
           headerRight={
             <Button onClick={handleComplete} className="p-0" variant={'basic'}>
               <span
                 className={`body2 ${
-                  name.trim().length === 0 ? 'text-gray-500 cursor-default' : 'body2Strong text-blue-400'
+                  name.trim().length === 0 ? 'cursor-default text-gray-500' : 'body2Strong text-blue-400'
                 }`}
               >
                 완료
@@ -60,7 +65,7 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
           }
           title="버킷 이름"
         />
-        <section className="pt-[56px] flex flex-col h-full">
+        <section className="flex h-full flex-col pt-[56px]">
           <div className="px-4">
             <SearchInput
               maxLength={30}
@@ -73,12 +78,12 @@ const BucketNameOverlay: FC<BucketNameOverlayProps> = ({ onSubmit, show, closeMo
             />
           </div>
 
-          <div className="flex flex-col grow pt-6 overflow-y-auto">
+          <div className="flex grow flex-col overflow-y-auto pt-6">
             <Divider />
             {showTemplate && (
-              <div className="grow flex flex-col px-4">
-                <div className="h-[44px] flex items-center">
-                  <h2 className="text-gray-500 body1Strong">추천 버킷 리스트에서 찾아보세요 👀</h2>
+              <div className="flex grow flex-col px-4">
+                <div className="flex h-[44px] items-center">
+                  <h2 className="body1Strong text-gray-500">추천 버킷 리스트에서 찾아보세요 👀</h2>
                 </div>
                 <Suspense fallback={<div>Loading ...</div>}>
                   <BucketTemplates onSelect={handleSelectTemplate} />

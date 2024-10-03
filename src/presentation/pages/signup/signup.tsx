@@ -1,6 +1,6 @@
 import { signupUser } from '@/services/user';
-import { Button, ConfirmModal, Input } from '@/presentation/components/ui';
-import Checkbox from '@/presentation/components/ui/Checkbox';
+import { ConfirmModal } from '@/presentation/components/ui';
+import CheckboxLegacy from '@/presentation/components/ui/CheckboxLegacy';
 import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,6 +9,8 @@ import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { getOccupations } from '@/services/bucket';
+import { LegacyInput } from '@/shared/ui/LegacyInput';
+import { Button } from '@/shared/ui/Button';
 
 interface IInputLabelProps {
   id: string;
@@ -119,9 +121,9 @@ const Signup: FC = () => {
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="mt-8">
           <InputLabel id="nickname" label="누구의 버킷 리스트인가요?" />
-          <div className="py-2 flex">
+          <div className="flex py-2">
             <div className="grow">
-              <Input
+              <LegacyInput
                 {...register('nickname', {
                   required: true,
                   pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,8}$/i
@@ -142,8 +144,8 @@ const Signup: FC = () => {
         </div>
         <div className="mt-8">
           <InputLabel id="year" label="태어난 연도가 어떻게 되세요? (선택)" />
-          <div className="pt-2 flex">
-            <Input
+          <div className="flex pt-2">
+            <LegacyInput
               value={year ?? ''}
               onChange={(e) => {
                 setYear(e.target.value);
@@ -152,7 +154,7 @@ const Signup: FC = () => {
               max={2024}
               inputMode="numeric"
               variant={'gray'}
-              className={`h-12 flex-grow bg-white text-start flex justify-start`}
+              className={`flex h-12 flex-grow justify-start bg-white text-start`}
               placeholder="2000"
             />
           </div>
@@ -162,9 +164,7 @@ const Signup: FC = () => {
           <div className="pt-2">
             <select
               {...register('occupationId')}
-              className={`w-full bg-white h-12 rounded-5xl py-[5px] appearance-none px-4 focus:outline-none border-2 border-text-gray-400
-                  ${!getValues('occupationId') ? 'text-gray-400' : ''}
-              `}
+              className={`border-text-gray-400 h-12 w-full appearance-none rounded-5xl border-2 bg-white px-4 py-[5px] focus:outline-none ${!getValues('occupationId') ? 'text-gray-400' : ''} `}
             >
               <option value="">직무</option>
               {occupations?.map((occupation) => {
@@ -179,12 +179,11 @@ const Signup: FC = () => {
         </div>
         <div className="mt-8">
           <div className={`flex items-center`}>
-            <Image width={90} height={24} src="/images/icons/main-icon-gray.svg" className="mr-2"
-                   alt="0'sBucket"/>
+            <Image width={90} height={24} src="/images/icons/main-icon-gray.svg" className="mr-2" alt="0'sBucket" />
             <InputLabel id="discovery-path" label=" 을 어떻게 알게되셨나요? (선택)" />
           </div>
-          <div className="pt-2 flex">
-            <Input
+          <div className="flex pt-2">
+            <LegacyInput
               {...register('discoveryPath')}
               id="discovery-path"
               maxLength={150}
@@ -197,12 +196,18 @@ const Signup: FC = () => {
         </div>
 
         <div className="mt-8 flex flex-col">
-          <div className="pb-3 border-b">
-            <Checkbox checked={agree.all} onChange={onChangeAgree} id="all" label="전체동의" textClass="body2Strong" />
+          <div className="border-b pb-3">
+            <CheckboxLegacy
+              checked={agree.all}
+              onChange={onChangeAgree}
+              id="all"
+              label="전체동의"
+              textClass="body2Strong"
+            />
           </div>
           <div className="pt-3">
             <div className="mt-3">
-              <Checkbox
+              <CheckboxLegacy
                 checked={agree.agreement}
                 onChange={onChangeAgree}
                 id="agreement"
@@ -212,7 +217,7 @@ const Signup: FC = () => {
           </div>
         </div>
         <div className="mt-8">
-          <Button disabled={!isValid || !isAgreed()} className="w-full mb-2">
+          <Button disabled={!isValid || !isAgreed()} className="mb-2 w-full">
             계정 만들기
           </Button>
         </div>
@@ -224,7 +229,7 @@ const Signup: FC = () => {
             setIdDuplicationErr(false);
           }}
         >
-          <div className="text-center py-3">
+          <div className="py-3 text-center">
             <p className="subTitle1 mb-4">이미 사용중인 아이디에요</p>
             <Button
               className="w-full"

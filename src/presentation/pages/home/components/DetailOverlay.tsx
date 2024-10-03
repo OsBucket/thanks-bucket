@@ -3,33 +3,38 @@
 import Image from 'next/image';
 import { FC, useState } from 'react';
 
-import { Bucket, Todo } from '@/domain/models/bucket-model';
-import usePreventScroll from '@/presentation/hooks/usePreventScroll';
-import { UpdateBucketValue } from '@/services/bucket';
+import { Bucket, Todo } from '@/entities/bucket/Bucket';
+import usePreventScroll from '@/shared/lib/hooks/usePreventScroll';
+import { ChangeBucketStatusValue, ChangeTodoStatusValue } from '@/services/bucket';
 import { UseMutationResult } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
-import { Button, Portal } from '@/presentation/components/ui';
+import { Portal } from '@/presentation/components/ui';
 import TodoList from '@/presentation/components/TodoList';
-import { Close } from '@/presentation/components/common/vectors';
+import { Close } from '@/shared/ui';
+import { Button } from '@/shared/ui/Button';
 
 interface DetailOverlayProps {
   bucket: Bucket;
   closeOverlay: () => void;
-  updateMutation: UseMutationResult<AxiosResponse, Error, UpdateBucketValue, unknown>;
+  changeBucketStatusMutation: UseMutationResult<AxiosResponse, Error, ChangeBucketStatusValue, unknown>;
+  changeTodoStatusMutation: UseMutationResult<AxiosResponse, Error, ChangeTodoStatusValue, unknown>;
 }
 
-const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMutation }) => {
+const DetailOverlay: FC<DetailOverlayProps> = ({
+                                                 bucket,
+                                                 closeOverlay,
+                                                 changeBucketStatusMutation,
+                                                 changeTodoStatusMutation
+                                               }) => {
   const router = useRouter();
   const [todoList, setTodoList] = useState<Todo[]>(bucket.bucketTodos ?? []);
   const [showClapping, setShowClapping] = useState<boolean>(false);
 
-  usePreventScroll();
+  // usePreventScroll();
 
   const isBucketComplete = () => {
-    if (bucket.isDone) return true;
-    if (!todoList.length) return false;
-    return todoList?.every((todo) => todo.isDone);
+    return bucket.bucketStatus === 'FINISH';
   };
 
   const backdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -40,18 +45,18 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
 
   const onToggleChecked = async (id: string, checked: boolean) => {
     const newTodos = [...todoList];
-    const index = newTodos.findIndex((todo) => todo.id === Number(id));
-    newTodos[index].isDone = checked;
+    const newTodo = newTodos.find((todo) => todo.id === Number(id));
+    if (!newTodo) return;
+    newTodo.todoStatus = checked ? 'FINISH' : 'START';
 
-    const isBucketComplete = newTodos.every((todo) => todo.isDone);
-
-    updateMutation.mutate({
-      ...bucket,
-      isDone: isBucketComplete,
-      topicIds: bucket.bucketTopics?.map((item) => item.id),
-      bucketTodos: newTodos
+    changeTodoStatusMutation.mutate({
+      bucketId: bucket.id,
+      bucketTodoId: newTodo.id,
+      status: newTodo.todoStatus
     });
-    if (isBucketComplete) {
+
+    //TODO 정상동작 체크하기
+    if (bucket.bucketStatus === 'FINISH') {
       showGifImage();
     }
 
@@ -67,11 +72,11 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
 
   const getCompletedTodoPercent = () => {
     if (!todoList.length) return 0;
-    return Math.floor((todoList.filter((todo) => todo.isDone).length / todoList.length) * 100);
+    return Math.floor((todoList.filter((todo) => todo.todoStatus === 'FINISH').length / todoList.length) * 100);
   };
 
   const getTodoComments = () => {
-    const completedTodoList = todoList.filter((todo) => todo.isDone).length;
+    const completedTodoList = todoList.filter((todo) => todo.todoStatus === 'FINISH').length;
     if (completedTodoList === 0) {
       return '열심히 달성해봐요 💪';
     }
@@ -84,19 +89,18 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
   };
 
   const onBucketComplete = () => {
-    const newTodos = [...todoList];
-    newTodos.forEach((todo) => {
-      todo.isDone = true;
+    bucket.bucketStatus = 'FINISH';
+    // const newTodos = [...todoList];
+    // newTodos.forEach((todo) => {
+    //   todo.isDone = true;
+    // });
+
+    changeBucketStatusMutation.mutate({
+      bucketId: bucket.id,
+      status: bucket.bucketStatus
     });
 
-    updateMutation.mutate({
-      ...bucket,
-      isDone: true,
-      topicIds: bucket.bucketTopics?.map((item) => item.id),
-      bucketTodos: newTodos
-    });
-
-    setTodoList(newTodos);
+    setTodoList(bucket.bucketTodos ?? []);
     showGifImage();
   };
 
@@ -134,7 +138,7 @@ const DetailOverlay: FC<DetailOverlayProps> = ({ bucket, closeOverlay, updateMut
               TO DO LIST <span>{todoList.length}</span>
             </p>
             {todoList.length > 0 ? (
-              <TodoList todoList={todoList} toggleChecked={onToggleChecked} inputDisabled={true} />
+              <TodoList todoList={todoList} setTodoList={setTodoList} toggleEnabled={true} inputEnabled={false} />
             ) : (
               <div className="py-5 flex flex-col justify-center items-center mt-2 h-[112px]">
                 <Image width={40} height={40} src="/check-list.svg" alt="check-list" />

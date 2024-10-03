@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { MemberRole } from './libs/core/base';
+import { NextResponse } from 'next/server';
 import { fetchProfile } from './services/user';
+import { KAKAO_LOGIN_URL } from '@/features/login';
+import { MemberRole } from '@/entities/auth/model/Profile';
 
 export default async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === '/auth/success') {
@@ -33,7 +34,7 @@ async function AuthSuccessReponse(request: NextRequest) {
         return NextResponse.redirect(`${url.origin}/auth/signup?access_token=${access_token}`);
       }
     } else {
-      return NextResponse.redirect(`${url.origin}/auth/login`);
+      return NextResponse.redirect(KAKAO_LOGIN_URL);
     }
   }
 }
@@ -64,13 +65,13 @@ async function PrivatePageResponse(request: NextRequest) {
   const url = request.nextUrl.clone();
 
   if (access_token === undefined) {
-    return NextResponse.redirect(`${url.origin}/auth/login`);
+    return NextResponse.redirect(KAKAO_LOGIN_URL);
   } else {
     const res = await fetchProfile(access_token);
     if (res.ok) {
       return NextResponse.next();
     } else {
-      const response = NextResponse.redirect(`${url.origin}/auth/login`);
+      const response = NextResponse.redirect(KAKAO_LOGIN_URL);
       response.cookies.delete('jwt');
       return response;
     }

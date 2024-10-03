@@ -1,6 +1,7 @@
-import { baseClientEnv, Profile } from '@/libs/core/base';
-import { client } from '@/libs/core/common';
 import { AxiosRequestConfig } from 'axios';
+import { Profile } from '@/entities/auth/model/Profile';
+import { client } from '@/shared/api/client';
+import { baseClientEnv } from '@/shared/lib/baseEnv';
 
 type SignupPayload = {
   nickname: string;
@@ -18,15 +19,11 @@ export async function signupUser(payload: SignupPayload, config?: AxiosRequestCo
   return client.api.post('/auth/signup', payload, config);
 }
 
-export async function profileUser() {
-  return client.api.get('/auth/profile');
-}
-
 export async function logout() {
   return client.api.get('/auth/logout');
 }
 
-export function fetchProfile(accessToken: string) {
+export async function fetchProfile(accessToken: string) {
   return fetch(`${baseClientEnv.serverAPIUri}/auth/profile`, {
     headers: { Authorization: accessToken }
   });

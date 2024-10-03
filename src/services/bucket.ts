@@ -1,20 +1,8 @@
-import { Bucket, BucketTopic } from '@/domain/models/bucket-model';
-
-import { Occupation } from '@/domain/models/user-model';
-import { client } from '@/libs/core/common';
-import { ResponseWithPagination } from '@/libs/types/utils';
+import { Occupation } from '@/entities/occupation/model/Occupation';
 import { AxiosRequestConfig } from 'axios';
-import queryString from 'query-string';
+import { Topic } from '@/entities/topic/model/Topic';
+import { client } from '@/shared/api/client';
 
-type PostBucketParams = {
-  title: string;
-  goalDate: string;
-  topicIds: number[];
-  bucketTodos: {
-    content: string;
-    isDone: boolean;
-  }[];
-};
 
 export interface BucketTemplate {
   id: number;
@@ -23,58 +11,18 @@ export interface BucketTemplate {
   createdAt: string;
   bucketTemplateTopics:
     | {
-        id: number;
-        createdAt: string;
-        topic: {
-          id: number;
-          content: string;
-          createdAt: string;
-        };
-      }[]
+    id: number;
+    createdAt: string;
+    topic: {
+      id: number;
+      content: string;
+      createdAt: string;
+    };
+  }[]
     | null;
 }
 
-interface GetBucketsQuery {
-  nickname?: string;
-  page: number;
-  size: number;
-}
-
-export type UpdateBucketValue = Bucket & {
-  topicIds: number[];
-};
-
-export async function getBuckets(
-  query: GetBucketsQuery,
-  config?: AxiosRequestConfig
-): Promise<ResponseWithPagination<Bucket>> {
-  const res = await client.api.get(`/buckets?${queryString.stringify(query)}`, config);
-  return res.data;
-}
-
-export async function getBucketById(id: number): Promise<Bucket> {
-  const res = await client.api.get(`/buckets/${id}`);
-  return res.data;
-}
-
-export async function addBucket({ title, goalDate, topicIds, bucketTodos }: PostBucketParams) {
-  return client.api.post('/buckets', {
-    title,
-    goalDate,
-    topicIds,
-    bucketTodos
-  });
-}
-
-export async function deleteBucketById(id: number) {
-  return client.api.delete(`/buckets/${id}`);
-}
-
-export async function updateBucketById(bucket: UpdateBucketValue) {
-  return client.api.put(`/buckets/${bucket.id}`, bucket);
-}
-
-export async function getTopics(config?: AxiosRequestConfig): Promise<BucketTopic[]> {
+export async function getTopics(config?: AxiosRequestConfig): Promise<Topic[]> {
   const res = await client.api.get('/topics', config);
   return res.data;
 }

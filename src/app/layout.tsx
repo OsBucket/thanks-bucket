@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import '@/presentation/styles/index.css';
-import { System } from '@/ui/System';
-import KakaoScript from '@/libs/core/scripts/kakao';
+import '@/shared/lib/index.css';
+import { QueryProvider } from './_providers';
+import KakaoScript from '@/shared/lib/KakaoScript';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="icon" type="image/svg+xml" href="/images/icons/main-icon.svg" />
       </head>
       <body className={inter.className}>
-        <System.Provider>{children}</System.Provider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
       <KakaoScript />
     </html>

@@ -1,10 +1,10 @@
 'use client';
 import { useRouter } from 'next/navigation';
-
-import { makeUpdateBucket } from '@/main/factories/pages/update-bucket-factory';
-import { FullHeightDialog } from '@/presentation/components/common';
 import { useQuery } from '@tanstack/react-query';
 import { getProfile } from '@/services/user';
+import { FullHeightDialog } from '@/widgets/full-height-page/ui/FullHeightDialog';
+import UpdateBucket from '@/presentation/pages/update-bucket/update-bucket';
+import { getMe } from '@/entities/auth';
 
 interface Props {
   params: {
@@ -13,21 +13,18 @@ interface Props {
 }
 
 export default function UpdateBucketPage({ params }: Props) {
+  const me = getMe();
   const router = useRouter();
-  const { data: profile } = useQuery({
-    queryKey: ['profile'],
-    queryFn: getProfile
-  });
 
   const handleGoBack = () => {
-    if (profile !== undefined) {
-      router.push(`/buckets/${profile.nickname}`);
+    if (me !== undefined) {
+      router.push(`/buckets/${me.NICKNAME}`);
     }
   };
 
   return (
     <FullHeightDialog title="버킷 수정" onGoback={handleGoBack}>
-      {makeUpdateBucket(params.bucketId)}
+      <UpdateBucket bucketId={params.bucketId} />
     </FullHeightDialog>
   );
 }

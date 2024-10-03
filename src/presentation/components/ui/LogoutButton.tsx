@@ -1,7 +1,7 @@
 'use client';
 import { deleteCookie } from 'cookies-next';
 import { logout } from '@/services/user';
-import { Button } from './Button';
+import { Button } from '@/shared/ui/Button';
 import Link from 'next/link';
 
 function LogoutButton() {

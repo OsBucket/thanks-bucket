@@ -1,7 +1,8 @@
 'use client';
 
 import { FC } from 'react';
-import { Portal, Button } from '.';
+import { Portal } from '.';
+import { Button } from '@/shared/ui/Button';
 
 interface ConfirmModalProps {
   children: React.ReactNode;
@@ -14,14 +15,14 @@ interface ConfirmModalProps {
 }
 
 export const ConfirmModal: FC<ConfirmModalProps> = ({
-  headerMessage,
-  modalMessage,
-  closeModal,
-  onConfirm,
-  isLoading,
-  hasCancelBtn = false,
-  children
-}) => {
+                                                      headerMessage,
+                                                      modalMessage,
+                                                      closeModal,
+                                                      onConfirm,
+                                                      isLoading,
+                                                      hasCancelBtn = false,
+                                                      children
+                                                    }) => {
   const backdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -33,7 +34,8 @@ export const ConfirmModal: FC<ConfirmModalProps> = ({
         onClick={backdropClick}
         className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
       >
-        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-3xl bg-white p-5 min-w-[300px]">
+        <div
+          className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-3xl bg-white p-5 min-w-[300px]">
           {children ? (
             children
           ) : (
