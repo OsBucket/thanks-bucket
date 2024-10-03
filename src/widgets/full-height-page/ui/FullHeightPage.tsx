@@ -6,5 +6,5 @@ interface FullHeightPageProps {
 }
 
 export function FullHeightPage({ children, className }: FullHeightPageProps) {
-  return <div className={cn('relative flex w-full flex-col', className)}>{children}</div>;
+  return <div className={cn('relative flex h-dvh w-full flex-col', className)}>{children}</div>;
 }
