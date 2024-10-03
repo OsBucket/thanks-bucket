@@ -1,15 +1,8 @@
+'use client';
+
 import { FC } from 'react';
-import { createPortal } from 'react-dom';
-import { Button } from './Button';
-
-interface ModalWrapperProps {
-  children: React.ReactNode;
-}
-
-export const ModalWrapper: FC<ModalWrapperProps> = ({ children }) => {
-  if (window === undefined) return null;
-  return <>{createPortal(children, document.body)}</>;
-};
+import { Portal } from '.';
+import { Button } from '@/shared/ui/Button';
 
 interface ConfirmModalProps {
   children: React.ReactNode;
@@ -21,27 +14,28 @@ interface ConfirmModalProps {
   hasCancelBtn?: boolean;
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = ({
-  headerMessage,
-  modalMessage,
-  closeModal,
-  onConfirm,
-  isLoading,
-  hasCancelBtn = false,
-  children
-}) => {
+export const ConfirmModal: FC<ConfirmModalProps> = ({
+                                                      headerMessage,
+                                                      modalMessage,
+                                                      closeModal,
+                                                      onConfirm,
+                                                      isLoading,
+                                                      hasCancelBtn = false,
+                                                      children
+                                                    }) => {
   const backdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       closeModal();
     }
   };
   return (
-    <ModalWrapper>
+    <Portal>
       <div
         onClick={backdropClick}
         className="bg-black bg-opacity-40 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full"
       >
-        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-3xl bg-white p-5 min-w-[300px]">
+        <div
+          className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-3xl bg-white p-5 min-w-[300px]">
           {children ? (
             children
           ) : (
@@ -72,7 +66,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
           )}
         </div>
       </div>
-    </ModalWrapper>
+    </Portal>
   );
 };
 

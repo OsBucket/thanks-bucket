@@ -1,2 +1,4 @@
-export { default as SearchInput } from './search-input';
-export { default as Divider } from './divider';
+import dynamic from 'next/dynamic';
+
+export const ConfirmModal = dynamic(() => import('./ConfirmModal'), { ssr: false });
+export const Portal = dynamic(() => import('../../../shared/ui/Portal'), { ssr: false });

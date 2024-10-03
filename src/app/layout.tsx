@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import ReactQueryContext from '@/presentation/context/ReactQueryContext';
 
-import '@/presentation/styles/index.css';
+import '@/shared/lib/index.css';
+import { QueryProvider } from './_providers';
+import KakaoScript from '@/shared/lib/KakaoScript';
 
 const inter = Inter({ subsets: ['latin'] });
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 export const metadata: Metadata = {
   title: 'Thanks Bucket',
@@ -21,21 +28,16 @@ export const metadata: Metadata = {
   ]
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
         <link rel="icon" type="image/svg+xml" href="/images/icons/main-icon.svg" />
       </head>
       <body className={inter.className}>
-        <ReactQueryContext>
-          <div className="max-w-[450px] mx-auto">{children}</div>
-        </ReactQueryContext>
+        <QueryProvider>{children}</QueryProvider>
       </body>
+      <KakaoScript />
     </html>
   );
 }

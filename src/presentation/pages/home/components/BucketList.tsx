@@ -1,27 +1,23 @@
-import { Bucket } from '@/domain/models/bucket-model';
 import { FC } from 'react';
 import BucketItem from './BucketItem';
+import { Bucket } from '@/entities/bucket';
 
 interface BucketListProps {
   bucketList: Bucket[];
   selectBucket: (bucket: Bucket) => void;
-  toggleComplete: (id: string, checked: boolean) => void;
+  doClapping: () => void;
   clickMoreBtn: (bucket: Bucket) => void;
 }
 
-const BucketList: FC<BucketListProps> = ({ bucketList, toggleComplete, selectBucket, clickMoreBtn }) => {
+const BucketList: FC<BucketListProps> = ({ bucketList, doClapping, selectBucket, clickMoreBtn }) => {
   return (
-    <ul
-      className={`
-      ${bucketList.length > 4 ? 'min-h-[100vh] pb-[150px]' : ''}
-      `}
-    >
+    <ul className="flex flex-1 flex-col justify-center gap-2">
       {bucketList.map((bucket) => (
         <BucketItem
           selectBucket={selectBucket}
           key={bucket.id}
           bucket={bucket}
-          toggleComplete={toggleComplete}
+          doClapping={doClapping}
           clickMoreBtn={clickMoreBtn}
         />
       ))}

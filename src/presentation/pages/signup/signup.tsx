@@ -1,13 +1,16 @@
-import { loginUser, signupUser } from '@/services/user';
-import { Button } from '@/presentation/components/ui/Button';
-import Checkbox from '@/presentation/components/ui/Checkbox';
-import ConfirmModal from '@/presentation/components/ui/ConfirmModal';
-import { Input } from '@/presentation/components/ui/Input';
-import { FC, useEffect, useRef, useState } from 'react';
+import { signupUser } from '@/services/user';
+import { ConfirmModal } from '@/presentation/components/ui';
+import CheckboxLegacy from '@/presentation/components/ui/CheckboxLegacy';
+import { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import OccupationSelect from './components/OccupationSelect';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { setCookie } from 'cookies-next';
+
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { getOccupations } from '@/services/bucket';
+import { LegacyInput } from '@/shared/ui/LegacyInput';
+import { Button } from '@/shared/ui/Button';
 
 interface IInputLabelProps {
   id: string;
@@ -23,17 +26,18 @@ const InputLabel = ({ id, label }: IInputLabelProps) => {
 };
 
 interface ISignupInput {
-  id: string;
-  password: string;
-  passwordConfirm: string;
   nickname: string;
-  occupationId: string;
+  birthday?: string;
+  occupationId?: string;
+  discoveryPath?: string;
 }
 
 const Signup: FC = () => {
-  const rowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [year, setYear] = useState<string | undefined>(undefined);
+
+  const params = useSearchParams();
+  const accessToken = params?.get('access_token');
 
   const {
     register,
@@ -45,6 +49,14 @@ const Signup: FC = () => {
     mode: 'onBlur'
   });
 
+  const { data: occupations } = useQuery({
+    queryKey: ['occupations'],
+    queryFn: () =>
+      getOccupations({
+        headers: { Authorization: accessToken }
+      })
+  });
+
   const [agree, setAgree] = useState<{ [key: string]: boolean }>({
     all: false,
     agreement: false
@@ -52,6 +64,46 @@ const Signup: FC = () => {
   const [idDuplicationErr, setIdDuplicationErr] = useState(false);
 
   watch();
+
+  const onChangeAgree = (id: string, checked: boolean) => {
+    if (id === 'all') {
+      setAgree((prev) => {
+        return { ...prev, all: checked, age: checked, agreement: checked };
+      });
+    } else {
+      setAgree((prev) => {
+        return { ...prev, [id]: checked };
+      });
+    }
+  };
+
+  const onSubmit: SubmitHandler<ISignupInput> = (data) => {
+    signupUser(
+      {
+        nickname: data.nickname,
+        occupationId: data.occupationId,
+        birthday: year ? `${year}-01-01` : undefined,
+        discoveryPath: data.discoveryPath
+      },
+      { headers: { Authorization: accessToken } }
+    )
+      .then((responseAccessToekn) => {
+        console.log(responseAccessToekn);
+        setCookie('jwt', responseAccessToekn);
+        router.push(`/buckets/${data.nickname}`);
+      })
+      .catch((e) => {
+        if (e.response?.data.message === '이미 존재하는 회원입니다.') {
+          setIdDuplicationErr(true);
+        }
+      });
+  };
+
+  const onError = () => {
+    // console.log('error');
+  };
+
+  const isAgreed = () => agree.agreement;
 
   useEffect(() => {
     const value = year;
@@ -63,123 +115,20 @@ const Signup: FC = () => {
     }
   }, [year]);
 
-  const onChangeAgree = (id: string, checked: boolean) => {
-    if (id === 'all') {
-      setAgree((prev) => {
-        return {
-          ...prev,
-          all: checked,
-          age: checked,
-          agreement: checked
-        };
-      });
-      return;
-    }
-    setAgree((prev) => {
-      return {
-        ...prev,
-        [id]: checked
-      };
-    });
-  };
-
-  const onSubmit: SubmitHandler<ISignupInput> = (data) => {
-    signupUser({
-      memberId: data.id,
-      password: data.password,
-      nickname: data.nickname,
-      occupationId: data.occupationId,
-      birthday: year ? `${year}-01-01` : undefined
-    })
-      .then(() => {
-        return loginUser(data.id, data.password);
-      })
-      .then(() => router.push('/new'))
-      .catch((e) => {
-        if (e.response?.data.message === '이미 존재하는 회원입니다.') {
-          setIdDuplicationErr(true);
-        }
-      });
-  };
-  const onError = () => {
-    // console.log('error');
-  };
-  const isPasswordSame = watch('password') === watch('passwordConfirm');
-
-  const isAgreed = () => agree.agreement;
-
   return (
-    <main className="max-w-[450px] px-4">
+    <main className="px-4">
       <h1 className="title3 py-5"> 시작이 반, 계정 만들기</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
-        <div>
-          <InputLabel id="id" label="아이디" />
-          <div className="py-2">
-            <Input
-              {...register('id', {
-                required: true,
-                pattern: /^[a-z0-9]{2,10}$/i
-              })}
-              maxLength={10}
-              id="id"
-              variant={'gray'}
-              type="text"
-              className="h-12"
-              placeholder="아이디"
-            />
-          </div>
-          <p className={`caption1Strong ${errors.id ? 'text-red-500' : 'text-gray-500'}`}>
-            영어 소문자, 숫자로 최대 10자까지 가능해요.
-          </p>
-        </div>
         <div className="mt-8">
-          <InputLabel id="password" label="비밀번호" />
-          <div className="pt-2">
-            <Input
-              {...register('password', {
-                minLength: 8,
-                required: true
-              })}
-              id="password"
-              variant={'gray'}
-              type="password"
-              className="h-12"
-              placeholder="비밀번호"
-            />
-          </div>
-          <div className="py-2">
-            <Input
-              {...register('passwordConfirm', {
-                required: true,
-                minLength: 8
-              })}
-              id="passwordConfirm"
-              variant={'gray'}
-              type="password"
-              className="h-12"
-              placeholder="비밀번호 확인"
-            />
-          </div>
-          {getValues('password') && (
-            <p className={`caption1Strong ${isPasswordSame && !errors.password ? 'text-green-500' : 'text-red-500'}`}>
-              {!isPasswordSame
-                ? '입력하신 두 비밀번호가 달라요'
-                : errors.password
-                ? '비밀번호는 최소 8자 이상 입력해주세요'
-                : '입력한 두 비밀번호가 일치해요.'}
-            </p>
-          )}
-        </div>
-        <div className="mt-8">
-          <InputLabel id="name" label="누구의 버킷 리스트인가요?" />
-          <div ref={rowRef} className="py-2 flex">
+          <InputLabel id="nickname" label="누구의 버킷 리스트인가요?" />
+          <div className="flex py-2">
             <div className="grow">
-              <Input
+              <LegacyInput
                 {...register('nickname', {
                   required: true,
                   pattern: /^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,8}$/i
                 })}
-                id="name"
+                id="nickname"
                 maxLength={8}
                 variant={'gray'}
                 type="text"
@@ -187,7 +136,7 @@ const Signup: FC = () => {
                 placeholder="닉네임 혹은 이름"
               />
             </div>
-            <Image src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
+            <Image width={90} height={24} src="/images/icons/signupIcon.svg" className="ml-2" alt="sign-up" />
           </div>
           <p className={`caption1Strong ${errors.nickname ? 'text-red-500' : 'text-gray-500'}`}>
             한글, 영어, 숫자로 2~8자까지 가능해요.
@@ -195,8 +144,8 @@ const Signup: FC = () => {
         </div>
         <div className="mt-8">
           <InputLabel id="year" label="태어난 연도가 어떻게 되세요? (선택)" />
-          <div className="pt-2 flex">
-            <Input
+          <div className="flex pt-2">
+            <LegacyInput
               value={year ?? ''}
               onChange={(e) => {
                 setYear(e.target.value);
@@ -205,7 +154,7 @@ const Signup: FC = () => {
               max={2024}
               inputMode="numeric"
               variant={'gray'}
-              className={`h-12 flex-grow bg-white text-start flex justify-start`}
+              className={`flex h-12 flex-grow justify-start bg-white text-start`}
               placeholder="2000"
             />
           </div>
@@ -213,17 +162,52 @@ const Signup: FC = () => {
         <div className="mt-8">
           <InputLabel id="job" label="직무가 어떻게 되세요? (선택)" />
           <div className="pt-2">
-            <OccupationSelect selectedOccupation={getValues('occupationId')} {...register('occupationId')} />
+            <select
+              {...register('occupationId')}
+              className={`border-text-gray-400 h-12 w-full appearance-none rounded-5xl border-2 bg-white px-4 py-[5px] focus:outline-none ${!getValues('occupationId') ? 'text-gray-400' : ''} `}
+            >
+              <option value="">직무</option>
+              {occupations?.map((occupation) => {
+                return (
+                  <option className="text-black" key={occupation.id} value={occupation.id}>
+                    {occupation.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+        <div className="mt-8">
+          <div className={`flex items-center`}>
+            <Image width={90} height={24} src="/images/icons/main-icon-gray.svg" className="mr-2" alt="0'sBucket" />
+            <InputLabel id="discovery-path" label=" 을 어떻게 알게되셨나요? (선택)" />
+          </div>
+          <div className="flex pt-2">
+            <LegacyInput
+              {...register('discoveryPath')}
+              id="discovery-path"
+              maxLength={150}
+              variant={'gray'}
+              type="text"
+              className="h-12"
+              placeholder="친구 추천, 검색 등"
+            />
           </div>
         </div>
 
         <div className="mt-8 flex flex-col">
-          <div className="pb-3 border-b">
-            <Checkbox checked={agree.all} onChange={onChangeAgree} id="all" label="전체동의" textClass="body2Strong" />
+          <div className="border-b pb-3">
+            <CheckboxLegacy
+              checked={agree.all}
+              onChange={onChangeAgree}
+              id="all"
+              label="전체동의"
+              textClass="body2Strong"
+            />
           </div>
           <div className="pt-3">
             <div className="mt-3">
-              <Checkbox
+              <CheckboxLegacy
                 checked={agree.agreement}
                 onChange={onChangeAgree}
                 id="agreement"
@@ -233,7 +217,7 @@ const Signup: FC = () => {
           </div>
         </div>
         <div className="mt-8">
-          <Button disabled={!isValid || !isAgreed()} className="w-full mb-2">
+          <Button disabled={!isValid || !isAgreed()} className="mb-2 w-full">
             계정 만들기
           </Button>
         </div>
@@ -245,7 +229,7 @@ const Signup: FC = () => {
             setIdDuplicationErr(false);
           }}
         >
-          <div className="text-center py-3">
+          <div className="py-3 text-center">
             <p className="subTitle1 mb-4">이미 사용중인 아이디에요</p>
             <Button
               className="w-full"
