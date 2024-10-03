@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { getMe } from '@/entities/auth';
 import { FullHeightDialog } from '@/widgets/full-height-page/ui/FullHeightDialog';
-import NewBucket from '@/pages/new-bucket/new-bucket';
+import NewBucket from '@/widgets/new-bucket/new-bucket';
 
 export default function NewBucketPage() {
   const me = getMe();

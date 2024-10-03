@@ -1,7 +1,7 @@
-import MyBucketPage from '@/pages/my-bucket-page/ui/MyBucketPage';
 import { BottomNavigation } from '@/widgets/bottom-navigation/ui/BottomNavigation';
 import { HeaderLogo } from '@/widgets/header';
 import { FullHeightPage } from '@/widgets/full-height-page';
+import MyBucketPage from '@/widgets/my-bucket/ui/MyBucketPage';
 
 interface Props {
   params: {

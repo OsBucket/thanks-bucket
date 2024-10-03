@@ -14,11 +14,12 @@ import { deleteBucketById } from '@/features/change-bucket/api/change-bucket';
 import { Bucket } from '@/entities/bucket';
 import { Divider } from '@/shared/ui/Divider';
 import { MyBucketProfile } from './MyBucketProfile';
-import { MyBucketSummary } from '@/pages/my-bucket-page/ui/MyBucketSummary';
-import { MyBucketListEmpty } from '@/pages/my-bucket-page/ui/MyBucketListEmpty';
+
 import BucketList from '@/presentation/pages/home/components/BucketList';
 import { getBucketsByNicknameQuery } from '@/entities/bucket/api/get-bucket';
 import { Snackbar } from '@/shared/ui/Snackbar';
+import { MyBucketSummary } from './MyBucketSummary';
+import { MyBucketListEmpty } from './MyBucketListEmpty';
 
 function MyBucketPage({ nickname }: { nickname: string }) {
   const queryClient = useQueryClient();
