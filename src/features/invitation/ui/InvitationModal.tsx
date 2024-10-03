@@ -39,7 +39,7 @@ const InvitationModal = ({ onClose, onOpenCreateBucketModal, invitationType }: P
   const shareKakao = (invitationId: number) => {
     if (invitationType === 1) {
       window.Kakao.Share.sendCustom({
-        templateId: 112817,
+        templateId: process.env.KAKAO_SHARE_INVITATION_1_TEMPLATE_ID,
         templateArgs: {
           invitationId: invitationId
         }
@@ -47,7 +47,7 @@ const InvitationModal = ({ onClose, onOpenCreateBucketModal, invitationType }: P
     }
     if (invitationType === 2) {
       window.Kakao.Share.sendCustom({
-        templateId: 112833,
+        templateId: process.env.KAKAO_SHARE_INVITATION_2_TEMPLATE_ID,
         templateArgs: {
           invitationId: invitationId
         }
